@@ -10,6 +10,7 @@ const initialState = {
   balance: 0,
   strSearch: '',
   listTokensFarm: [],
+  apr: '0',
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -44,6 +45,11 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         listTokensFarm: action.listTokensFarm,
+      };
+    case actions.SET_APR:
+      return {
+        ...state,
+        apr: action.apr,
       };
     default:
       return state;

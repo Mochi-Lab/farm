@@ -1,13 +1,14 @@
 import { connectWeb3Modal } from 'Connections/web3Modal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Col, Button } from 'antd';
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
-import { approveFarm, depositFarm, claimTotalVesting } from 'store/actions';
+import { approveFarm, depositFarm, claimTotalVesting, setApr } from 'store/actions';
 import { parseBalance } from 'utils/helper';
 import ModalFarm from 'Views/Farm/ModalFarm';
 import store from 'store/index';
 import logoMochi from 'Assets/logo-mochi.png';
 import './index.css';
+import { useSelector } from 'react-redux';
 
 export default function CardFarm({ token, index, walletAddress, fetchAllFarm, rootUrlsView }) {
   const [loadingApprove, setloadingApprove] = useState(false);
@@ -15,6 +16,10 @@ export default function CardFarm({ token, index, walletAddress, fetchAllFarm, ro
   const [loadingClaim, setLoadingClaim] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
   const [showModalFarm, setShowModalFarm] = useState({ status: false, type: '', symbol: '' });
+  const { apr } = useSelector((state) => state);
+  useEffect(() => {
+    store.dispatch(setApr());
+  });
 
   async function approveTokenFarm(addressFarm, index) {
     setloadingApprove(true);
@@ -87,7 +92,7 @@ export default function CardFarm({ token, index, walletAddress, fetchAllFarm, ro
                 <path d='M8 18H9.5V16H11.5V14.5H9.5V12.5H8V14.5H6V16H8V18Z'></path>
                 <path d='M14.09 10.95L15.5 9.54L16.91 10.95L17.97 9.89L16.56 8.47L17.97 7.06L16.91 6L15.5 7.41L14.09 6L13.03 7.06L14.44 8.47L13.03 9.89L14.09 10.95Z'></path>
               </svg>
-              <span>80.03%</span>
+              <span>{apr}%</span>
             </div>
           </div>
           <div className='show-earn textmode'>
