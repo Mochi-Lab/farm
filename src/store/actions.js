@@ -2,6 +2,8 @@ import { parseBalance } from 'utils/helper';
 import ERC20 from 'Contracts/ERC20.json';
 import Farm from 'Contracts/farm/Farm.json';
 import Vesting from 'Contracts/farm/Vesting.json';
+import Pair from 'Contracts/UniswapV2Pair.json';
+import { getContractAddress } from 'utils/getContractAddress';
 import { message } from 'antd';
 
 ////////////////////
@@ -225,4 +227,34 @@ export const claimTotalVesting = (contractVesting) => async (dispatch, getState)
     console.log(error);
     return false;
   }
+};
+
+const roundToTwoDp = (number) => Math.round(number * 100) / 100;
+
+export const SET_APR = 'SET_APR';
+export const setApr = () => async (dispatch, getState) => {
+  const { web3 } = getState();
+  try {
+    const pair = new web3.eth.Contract(Pair.abi, '0x96CDd5E2a888ebb97200a81D3710fdc1711cbB77');
+    const totalLpTokenInPool = await pair.methods
+      .balanceOf('0x5dDe01967C5D0483C81c4336DabEBC50BBEeF5e7')
+      .call();
+    const reserves = await pair.methods.getReserves().call();
+    const totalSupply = await pair.methods.totalSupply().call();
+    const LpTokenPriceMoma = (reserves[1] * 2) / totalSupply;
+    const poolLiquidityMoma = totalLpTokenInPool * LpTokenPriceMoma;
+    const yearlyMomaRewardAllocation = 6215038 * 10 ** 18;
+    let apr = (yearlyMomaRewardAllocation / poolLiquidityMoma) * 100;
+    apr = roundToTwoDp(apr);
+    dispatch({
+      type: SET_APR,
+      apr,
+    });
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+  // const poolLiquidityMoma = totalLpTokenInPool * LpTokenPriceMoma;
+  // const apr = yearlyMomaRewardAllocation.div(poolLiquidityMoma).times(100);
+  // return apr.isNaN() || !apr.isFinite() ? null : apr.toNumber();
 };
