@@ -1,0 +1,235 @@
+.staking-view {
+  text-align: center;
+}
+
+.staking-view .list-staking {
+  margin-top: 5rem;
+}
+
+.staking-view .list-staking .item-staking {
+  align-self: baseline;
+  background: rgb(255, 255, 255);
+  border-radius: 32px;
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 2rem;
+  position: relative;
+  text-align: center;
+  border: 1px solid rgb(0 0 0 / 8%);
+}
+
+.staking-view .list-staking .item-staking .header-item {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  align-content: stretch;
+}
+
+.staking-view .list-staking .item-staking .header-item .logo-token img {
+  width: 64px;
+  height: 64px;
+}
+
+.staking-view .list-staking .item-staking .header-item .info-pool {
+}
+.staking-view .list-staking .item-staking .header-item .info-pool .box-multi {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  align-content: stretch;
+}
+.staking-view .list-staking .item-staking .header-item .info-pool .box-multi .text-core {
+  -webkit-box-align: center;
+  align-items: center;
+  border-radius: 16px;
+  display: inline-flex;
+  font-weight: 400;
+  white-space: nowrap;
+  height: 28px;
+  padding: 0px 8px;
+  font-size: 14px;
+  background: transparent;
+  border: 2px solid #e35188;
+}
+.staking-view .list-staking .item-staking .header-item .info-pool .box-multi .text-core svg {
+  fill: #e35188;
+}
+.staking-view .list-staking .item-staking .header-item .info-pool .box-multi .text-core span {
+  margin-left: 0.3rem;
+  color: #e35188;
+}
+.staking-view .list-staking .item-staking .header-item .info-pool .box-multi .multier-pool {
+  margin: 0 0.25rem;
+  padding: 0.05rem 0.6rem;
+  border: 1px solid #cd2076;
+  border-radius: 1rem;
+  background: #cd2076;
+}
+.staking-view .list-staking .item-staking .header-item .info-pool .box-multi .multier-pool h3 {
+  color: white;
+  font-weight: bold;
+  margin: 0;
+}
+
+.staking-view .list-staking .item-staking .header-item .info-pool h2 {
+  margin: 0;
+  font-weight: bold;
+}
+
+.staking-view .list-staking .item-staking .header-item .logo-token img {
+  width: 64px;
+  height: 64px;
+}
+
+.staking-view .list-staking .item-staking .content-item {
+  margin: 1.5rem 0;
+  border-bottom: 1px solid rgb(0 0 0 / 17%);
+}
+.staking-view .list-staking .item-staking .content-item .show-apr,
+.staking-view .list-staking .item-staking .content-item .show-earn,
+.staking-view .list-staking .item-staking .content-item .show-vesting,
+.staking-view .list-staking .item-staking .content-item .wrap-amount-stake {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  align-content: stretch;
+}
+
+.staking-view .list-staking .item-staking .content-item .show-apr .apr {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+.staking-view .list-staking .item-staking .content-item .show-apr .apr span {
+  margin: 0 0.25rem;
+}
+
+.staking-view .list-staking .item-staking .content-item .wrap-amount-stake {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+.staking-view .list-staking .item-staking .content-item .wrap-amount-stake .token-earn {
+  font-weight: bold;
+}
+.harvest .ant-btn {
+  border-radius: 0.75rem;
+  background: #e35188;
+  border-color: #e35188;
+  color: white;
+}
+
+.harvest .ant-btn[disabled],
+.harvest .ant-btn[disabled]:hover,
+.harvest .ant-btn[disabled]:focus,
+.harvest .ant-btn[disabled]:active {
+  color: rgba(0, 0, 0, 0.25);
+  background: #f5f5f5;
+  border-color: #d9d9d9;
+  text-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.staking-view .list-staking .item-staking .content-item .wrap-amount-stake .harvest button {
+  border-radius: 0.75rem;
+}
+
+.staking-view .list-staking .item-staking .content-item .title-amount-stake,
+.staking-view .list-staking .item-staking .content-item .symbol-staked {
+  text-align: start;
+  font-weight: bold;
+}
+.staking-view .list-staking .item-staking .content-item .btn-stake {
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  border-radius: 1rem;
+  background: #e35188;
+  border-color: #e35188;
+}
+.ant-btn.ant-btn-round.ant-btn-lg.btn-confrim-farm {
+  margin-top: 0.5rem;
+  border-radius: 1rem;
+  background: #e35188;
+  border-color: #e35188;
+  color: white;
+}
+
+.staking-view .list-staking .item-staking .content-item .show-earn {
+  margin: 0.5rem 0;
+}
+
+.blur-text {
+  color: rgb(0 0 0 / 50%);
+}
+
+.staking-view .list-staking .item-staking .footer-item .btn-show-detail {
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+  color: #e35188;
+}
+.staking-view .list-staking .item-staking .footer-item .btn-show-detail svg {
+  fill: #e35188;
+}
+
+.staking-view .list-staking .item-staking .footer-item .detail-pool-stake {
+  margin-top: 1rem;
+}
+
+.staking-view .list-staking .item-staking .footer-item .detail-pool-stake .total-liquidity {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  align-content: stretch;
+}
+.staking-view .list-staking .item-staking .footer-item .detail-pool-stake .redirect-swap,
+.staking-view .list-staking .item-staking .footer-item .detail-pool-stake .view-contract-pool,
+.staking-view .list-staking .item-staking .footer-item .detail-pool-stake .see-pair-info {
+  text-align: start;
+  margin-top: 0.25rem;
+  font-weight: bold;
+}
+.staking-view .list-staking .item-staking .footer-item .detail-pool-stake a {
+  color: #e35188;
+}
+.staking-view .list-staking .item-staking .footer-item .detail-pool-stake a svg {
+  fill: #e35188;
+}
+
+.staking-view .list-staking .item-staking .content-item .wrap-show-vesting {
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  border-radius: 1rem;
+  background: #fafafa;
+  padding: 0.5rem;
+  margin: 1rem 0;
+}
+
+.staking-view .list-staking .item-staking .content-item .show-vesting {
+  margin: 0.5rem 0;
+}
+.staking-view .list-staking .item-staking .content-item .show-vesting .title-vesting {
+  font-weight: bold;
+}
+
+.staking-view .list-staking .item-staking .content-item .title-amount-claimable {
+  text-align: start;
+  font-weight: bold;
+  margin: 0.5rem 0;
+}
