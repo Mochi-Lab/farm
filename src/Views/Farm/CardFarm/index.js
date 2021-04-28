@@ -19,10 +19,10 @@ export default function CardFarm({ token, index, walletAddress, fetchAllFarm, ro
   async function approveTokenFarm(addressFarm, index) {
     setloadingApprove(true);
     if (!walletAddress) {
-      connectWeb3Modal();
+      await connectWeb3Modal();
     } else {
       await store.dispatch(approveFarm(addressFarm, token.contractFarm));
-      await fetchAllFarm(addressFarm, index);
+      await fetchAllFarm();
     }
     setloadingApprove(false);
   }
@@ -229,8 +229,8 @@ export default function CardFarm({ token, index, walletAddress, fetchAllFarm, ro
           {showDetail ? (
             <div className='detail-pool-stake'>
               <div className='total-liquidity textmode'>
-                <div className='title-liquidity'>Total Liquidity: </div>
-                <div className='amount-liquidity'>$1,268,255,353 </div>
+                {/* <div className='title-liquidity'>Total Liquidity: </div>
+                <div className='amount-liquidity'>$1,268,255,353 </div> */}
               </div>
               <div className='redirect-swap'>
                 <a

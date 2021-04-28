@@ -2,10 +2,7 @@ import { parseBalance } from 'utils/helper';
 import ERC20 from 'Contracts/ERC20.json';
 import Farm from 'Contracts/farm/Farm.json';
 import Vesting from 'Contracts/farm/Vesting.json';
-import { getContractAddress } from 'utils/getContractAddress';
 import { message } from 'antd';
-
-var contractAddress;
 
 ////////////////////
 // Common
@@ -14,9 +11,6 @@ var contractAddress;
 export const SET_WEB3 = 'SET_WEB3';
 export const setWeb3 = (web3) => async (dispatch, getState) => {
   dispatch({ type: SET_WEB3, web3 });
-
-  let chainId = getState().chainId ? getState().chainId : await web3.eth.net.getId();
-  contractAddress = getContractAddress(chainId);
 };
 
 export const SET_CHAINID = 'SET_CHAINID';

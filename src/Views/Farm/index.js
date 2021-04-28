@@ -82,7 +82,7 @@ export default function Farm() {
 
   useInterval(() => {
     fetchAllFarm();
-  }, 10000);
+  }, 5000);
 
   return (
     <div className='staking-view'>
