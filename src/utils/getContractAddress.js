@@ -24,9 +24,7 @@ const contractAddress = {
     NFTCampaign: '0x23442A5094aC64f1B54D07a199e79738f56bdbfE',
     Mochi: '0x254d7BEc0dc2644B58Ddb4f04Bd6C0144ea32E19',
   },
-  4: {
-    Farm: '0x6a055040Ec01DE11480c7fD90913951FdB6ad2cD',
-  },
+  4: {},
   1: {},
 };
 
@@ -34,11 +32,11 @@ const listTokensFarm = {
   4: [
     {
       namePair: 'MOMA-ETH',
-      addressLP: '0x19026B8613bdB8B5335B110d50d3c7247D90c64A',
-      addressAddLP: '0xCd30C617dCd2083Ac8E959C2c1694609c7530d3C',
-      viewContractPair: '0x19026B8613bdB8B5335B110d50d3c7247D90c64A',
-      contractFarm: '0x45f12F7025B1387662B4e43c29b6D855D273dbCB',
-      contractVesting: '0x91110E27725248eE5Ce44482703b8f19AB9A5086',
+      addressLP: '0x96CDd5E2a888ebb97200a81D3710fdc1711cbB77',
+      addressAddLP: '0xFF02166F7ef6F03b18fB7c6e23d30430202Ef9A2',
+      viewContractPair: '0x96CDd5E2a888ebb97200a81D3710fdc1711cbB77',
+      contractFarm: '0x5dDe01967C5D0483C81c4336DabEBC50BBEeF5e7',
+      contractVesting: '0xcb2690a7DE1f6AC9C05aD910c2b3d1Ca429250AB',
       token0: 'ETH', // it can be an address or a symbol
       symbolEarn: 'MOMA',
       allowanceFarm: 0,

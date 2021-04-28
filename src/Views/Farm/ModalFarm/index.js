@@ -10,19 +10,23 @@ export default function ModalFarm({ showModalFarm, setShowModalFarm, token, fetc
   const [loading, setLoading] = useState(false);
 
   async function depositTokenFarm() {
-    setLoading(true);
-    await store.dispatch(depositFarm(amountLP, token.contractFarm));
-    fetchAllFarm();
-    cancelModal();
-    setLoading(false);
+    if (amountLP > 0) {
+      setLoading(true);
+      await store.dispatch(depositFarm(amountLP, token.contractFarm));
+      fetchAllFarm();
+      cancelModal();
+      setLoading(false);
+    }
   }
 
   async function withdrawTokenFarm() {
-    setLoading(true);
-    await store.dispatch(withdrawFarm(amountLP, token.contractFarm));
-    fetchAllFarm();
-    cancelModal();
-    setLoading(false);
+    if (amountLP > 0) {
+      setLoading(true);
+      await store.dispatch(withdrawFarm(amountLP, token.contractFarm));
+      fetchAllFarm();
+      cancelModal();
+      setLoading(false);
+    }
   }
 
   async function cancelModal() {
