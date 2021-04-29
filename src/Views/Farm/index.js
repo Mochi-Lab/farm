@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Row } from 'antd';
 import CardFarm from './CardFarm';
 // import CountDownTime from 'Components/CountDownTime';
-import { getListTokensFarm, getRootUrlView } from 'utils/getContractAddress';
+import { getListTokensFarm, getRootUrlView, getContractAddress } from 'utils/getContractAddress';
 import useInterval from 'utils/useInterval';
 import {
   checkAllowanceFarm,
@@ -13,17 +13,19 @@ import {
   fetchBalanceLP,
   fetchVestingTotalClaimableAmount,
   fetchTotalAmountLockedByUser,
+  setContractAddress,
 } from 'store/actions';
 import store from 'store/index';
 import './index.css';
 
 export default function Farm() {
-  const { walletAddress, chainId, listTokensFarm } = useSelector((state) => state);
+  const { walletAddress, chainId, listTokensFarm, contractAddress } = useSelector((state) => state);
   const [rootUrlsView, setRootUrlsView] = useState(getRootUrlView(chainId));
 
   useEffect(() => {
     const fetchListFarmDefault = async () => {
       await store.dispatch(setListTokensFarm(getListTokensFarm(chainId)));
+      await store.dispatch(setContractAddress(getContractAddress(chainId)));
       setRootUrlsView(getRootUrlView(chainId));
     };
 
@@ -80,6 +82,7 @@ export default function Farm() {
                     walletAddress={walletAddress}
                     fetchAllFarm={fetchAllFarm}
                     rootUrlsView={rootUrlsView}
+                    contractAddress={contractAddress}
                   />
                 ))
               : null}

@@ -24,6 +24,11 @@ export const setListTokensFarm = (listTokensFarm) => (dispatch) => {
   dispatch({ type: SET_LIST_TOKENS_FARM, listTokensFarm });
 };
 
+export const SET_CONTRACT_ADDRESS = 'SET_CONTRACT_ADDRESS';
+export const setContractAddress = (contractAddress) => (dispatch) => {
+  dispatch({ type: SET_CONTRACT_ADDRESS, contractAddress });
+};
+
 export const SET_ADMIN_ADDRESS = 'SET_ADMIN_ADDRESS';
 export const setAdminAddress = (addressesProvider) => async (dispatch) => {
   let adminAddress = await addressesProvider.methods.getAdmin().call();
@@ -279,6 +284,58 @@ export const fecthTotalTokenLP = (addressTokenLP, addressContractFarm, moma) => 
     let totalSupplyLP = await instaneLP.methods.totalSupply().call();
     let totalTokenLP = (2 * balanceMomaOfPair * balanceLPOfFarm) / totalSupplyLP;
     return totalTokenLP;
+  } catch (error) {
+    console.log(error);
+    message.error('Oh no! Something went wrong !');
+  }
+};
+
+export const fecthPriceTokenWithUSDT = (
+  contractAddress,
+  pairTokenAndNative,
+  moma,
+  decimalsMoma
+) => async (dispatch, getState) => {
+  const { web3 } = getState();
+  try {
+    if (!!contractAddress.PairUsdtNative) {
+      // calculator price of native token ETH,BNB,...
+      const instancePairUsdtNative = new web3.eth.Contract(
+        Pair.abi,
+        contractAddress.PairUsdtNative
+      );
+      let token0UsdtNative = await instancePairUsdtNative.methods.token0().call();
+      let token1UsdtNative = await instancePairUsdtNative.methods.token1().call();
+      let reservesUsdtNaive = await instancePairUsdtNative.methods.getReserves().call();
+      let reserves0UsdtNative = reservesUsdtNaive[0],
+        reserves1UsdtNative = reservesUsdtNaive[1];
+      if (token0UsdtNative.toLowerCase() !== contractAddress.USDT.address.toLowerCase()) {
+        [token0UsdtNative, token1UsdtNative] = [token1UsdtNative, token0UsdtNative];
+        [reserves0UsdtNative, reserves1UsdtNative] = [reserves1UsdtNative, reserves0UsdtNative];
+      }
+      let priceNative =
+        reserves0UsdtNative /
+        Math.pow(10, contractAddress.USDT.decimals) /
+        (reserves1UsdtNative / Math.pow(10, contractAddress.NATIVE.decimals));
+
+      // Calculator price of token need check by price native token
+      const instancePairTokenNative = new web3.eth.Contract(Pair.abi, pairTokenAndNative);
+      let token0TokenNative = await instancePairTokenNative.methods.token0().call();
+      let token1TokenNative = await instancePairTokenNative.methods.token1().call();
+      let reservesTokenNaive = await instancePairTokenNative.methods.getReserves().call();
+      let reserves0TokenNative = reservesTokenNaive[0],
+        reserves1TokenNative = reservesTokenNaive[1];
+      if (token0TokenNative.toLowerCase() !== moma.toLowerCase()) {
+        [token0TokenNative, token1TokenNative] = [token1TokenNative, token0TokenNative];
+        [reserves0TokenNative, reserves1TokenNative] = [reserves1TokenNative, reserves0TokenNative];
+      }
+      let priceMoma =
+        (reserves1TokenNative /
+          Math.pow(10, contractAddress.NATIVE.decimals) /
+          (reserves0TokenNative / Math.pow(10, decimalsMoma))) *
+        priceNative;
+      return priceMoma;
+    }
   } catch (error) {
     console.log(error);
     message.error('Oh no! Something went wrong !');
