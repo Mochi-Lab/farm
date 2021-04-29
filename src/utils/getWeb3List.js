@@ -18,7 +18,7 @@ export const web3Default = {
   4: {
     web3Default: new Web3(
       new Web3.providers.HttpProvider(
-        'https://rinkeby.infura.io/v3/0b24df5ffd004d22800cbf0fa8c87a85'
+        'https://rinkeby.infura.io/v3/bd65aacb68614592bb014d78c92a9786'
       )
     ),
     name: 'Rinkeby Test Network',
@@ -27,7 +27,7 @@ export const web3Default = {
   1: {
     web3Default: new Web3(
       new Web3.providers.HttpProvider(
-        'https://mainnet.infura.io/v3/0b24df5ffd004d22800cbf0fa8c87a85'
+        'https://mainnet.infura.io/v3/bd65aacb68614592bb014d78c92a9786'
       )
     ),
     name: 'Ethereum Mainnet',
@@ -35,7 +35,7 @@ export const web3Default = {
   },
 };
 
-export const networkDefault = 4;
+export const networkDefault = 1;
 
 export const getWeb3List = (_chainId) => {
   return web3Default[_chainId];

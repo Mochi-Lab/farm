@@ -11,8 +11,8 @@ const providerOptions = {
       rpc: {
         56: 'https://bsc-dataseed.binance.org/',
         97: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
-        1: 'https://mainnet.infura.io/v3/0b24df5ffd004d22800cbf0fa8c87a85',
-        4: 'https://rinkeby.infura.io/v3/0b24df5ffd004d22800cbf0fa8c87a85',
+        1: 'https://mainnet.infura.io/v3/bd65aacb68614592bb014d78c92a9786',
+        4: 'https://rinkeby.infura.io/v3/bd65aacb68614592bb014d78c92a9786',
       },
       qrcodeModalOptions: {
         mobileLinks: ['rainbow', 'metamask', 'argent', 'trust', 'imtoken', 'pillar'],

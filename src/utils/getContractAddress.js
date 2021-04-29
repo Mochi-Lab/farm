@@ -29,6 +29,25 @@ const contractAddress = {
 };
 
 const listTokensFarm = {
+  1: [
+    {
+      namePair: 'MOMA-ETH',
+      addressLP: '0x611ABC072ee91c0cc19FFEf97ac7E69A1A7A17eC',
+      moma: '0xbd1848e1491d4308Ad18287A745DD4DB2A4BD55B',
+      viewContractPair: '0x611ABC072ee91c0cc19FFEf97ac7E69A1A7A17eC',
+      contractFarm: '0x8d05f3bef44f3b4cd83427c83c2a4021a5e120d2',
+      contractVesting: '0xECDa3345f3018f1f911a53Fa42A96802ba7A463f',
+      token0: 'ETH', // it can be an address or a symbol
+      symbolEarn: 'MOMA',
+      allowanceFarm: 0,
+      pendingReward: 0,
+      amountStake: 0,
+      balanceLP: 0,
+      claimableAmount: 0,
+      amountLocking: 0,
+      apr: 0,
+    },
+  ],
   4: [
     {
       namePair: 'MOMA-ETH',
