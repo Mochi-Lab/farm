@@ -33,7 +33,7 @@ const listTokensFarm = {
     {
       namePair: 'MOMA-ETH',
       addressLP: '0x96CDd5E2a888ebb97200a81D3710fdc1711cbB77',
-      addressAddLP: '0xFF02166F7ef6F03b18fB7c6e23d30430202Ef9A2',
+      moma: '0xFF02166F7ef6F03b18fB7c6e23d30430202Ef9A2',
       viewContractPair: '0x96CDd5E2a888ebb97200a81D3710fdc1711cbB77',
       contractFarm: '0x5dDe01967C5D0483C81c4336DabEBC50BBEeF5e7',
       contractVesting: '0xcb2690a7DE1f6AC9C05aD910c2b3d1Ca429250AB',
@@ -45,6 +45,7 @@ const listTokensFarm = {
       balanceLP: 0,
       claimableAmount: 0,
       amountLocking: 0,
+      apr: 0,
     },
   ],
 };

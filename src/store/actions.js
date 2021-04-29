@@ -3,7 +3,6 @@ import ERC20 from 'Contracts/ERC20.json';
 import Farm from 'Contracts/farm/Farm.json';
 import Vesting from 'Contracts/farm/Vesting.json';
 import Pair from 'Contracts/UniswapV2Pair.json';
-import { getContractAddress } from 'utils/getContractAddress';
 import { message } from 'antd';
 
 ////////////////////
@@ -230,15 +229,11 @@ export const claimTotalVesting = (contractVesting) => async (dispatch, getState)
 };
 
 const roundToTwoDp = (number) => Math.round(number * 100) / 100;
-
-export const SET_APR = 'SET_APR';
-export const setApr = () => async (dispatch, getState) => {
+export const fecthAprPool = (addressLP, contractFarm) => async (dispatch, getState) => {
   const { web3 } = getState();
   try {
-    const pair = new web3.eth.Contract(Pair.abi, '0x96CDd5E2a888ebb97200a81D3710fdc1711cbB77');
-    const totalLpTokenInPool = await pair.methods
-      .balanceOf('0x5dDe01967C5D0483C81c4336DabEBC50BBEeF5e7')
-      .call();
+    const pair = new web3.eth.Contract(Pair.abi, addressLP);
+    const totalLpTokenInPool = await pair.methods.balanceOf(contractFarm).call();
     const reserves = await pair.methods.getReserves().call();
     const totalSupply = await pair.methods.totalSupply().call();
     const LpTokenPriceMoma = (reserves[1] * 2) / totalSupply;
@@ -246,10 +241,7 @@ export const setApr = () => async (dispatch, getState) => {
     const yearlyMomaRewardAllocation = 6215038 * 10 ** 18;
     let apr = (yearlyMomaRewardAllocation / poolLiquidityMoma) * 100;
     apr = roundToTwoDp(apr);
-    dispatch({
-      type: SET_APR,
-      apr,
-    });
+    return apr;
   } catch (error) {
     console.log(error);
     return false;
@@ -257,4 +249,38 @@ export const setApr = () => async (dispatch, getState) => {
   // const poolLiquidityMoma = totalLpTokenInPool * LpTokenPriceMoma;
   // const apr = yearlyMomaRewardAllocation.div(poolLiquidityMoma).times(100);
   // return apr.isNaN() || !apr.isFinite() ? null : apr.toNumber();
+};
+
+export const fecthRewardPerBlock = (contractFarm) => async (dispatch, getState) => {
+  const { web3 } = getState();
+  try {
+    const instaneFarm = new web3.eth.Contract(Farm.abi, contractFarm);
+    const blockCurrent = await web3.eth.getBlockNumber();
+    const rewardPerBlock = await instaneFarm.methods
+      .getMultiplier(blockCurrent, blockCurrent + 1)
+      .call();
+    return rewardPerBlock;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+
+export const fecthTotalTokenLP = (addressTokenLP, addressContractFarm, moma) => async (
+  dispatch,
+  getState
+) => {
+  const { web3 } = getState();
+  try {
+    const instaneLP = new web3.eth.Contract(ERC20.abi, addressTokenLP);
+    const instaneMoma = new web3.eth.Contract(ERC20.abi, moma);
+    let balanceMomaOfPair = await instaneMoma.methods.balanceOf(addressTokenLP).call();
+    let balanceLPOfFarm = await instaneLP.methods.balanceOf(addressContractFarm).call();
+    let totalSupplyLP = await instaneLP.methods.totalSupply().call();
+    let totalTokenLP = (2 * balanceMomaOfPair * balanceLPOfFarm) / totalSupplyLP;
+    return totalTokenLP;
+  } catch (error) {
+    console.log(error);
+    message.error('Oh no! Something went wrong !');
+  }
 };

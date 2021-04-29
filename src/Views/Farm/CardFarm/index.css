@@ -199,6 +199,17 @@
   align-items: center;
   align-content: stretch;
 }
+
+.staking-view
+  .list-staking
+  .item-staking
+  .footer-item
+  .detail-pool-stake
+  .total-liquidity
+  .amount-liquidity {
+  font-size: 1rem;
+}
+
 .staking-view .list-staking .item-staking .footer-item .detail-pool-stake .redirect-swap,
 .staking-view .list-staking .item-staking .footer-item .detail-pool-stake .view-contract-pool,
 .staking-view .list-staking .item-staking .footer-item .detail-pool-stake .see-pair-info {
@@ -232,4 +243,8 @@
   text-align: start;
   font-weight: bold;
   margin: 0.5rem 0;
+}
+
+.multier-pool .moma-per-block {
+  font-size: 0.9rem;
 }
