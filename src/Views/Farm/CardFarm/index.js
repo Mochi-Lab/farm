@@ -2,13 +2,22 @@ import { connectWeb3Modal } from 'Connections/web3Modal';
 import { useEffect, useState } from 'react';
 import { Col, Button } from 'antd';
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
-import { approveFarm, depositFarm, claimTotalVesting, setApr } from 'store/actions';
+import {
+  approveFarm,
+  depositFarm,
+  claimTotalVesting,
+  fecthAprPool,
+  fecthRewardPerBlock,
+  fecthTotalTokenLP,
+} from 'store/actions';
+
+import { ChainId, Token, WETH, Fetcher, Route } from '@uniswap/sdk';
+
 import { parseBalance } from 'utils/helper';
 import ModalFarm from 'Views/Farm/ModalFarm';
 import store from 'store/index';
 import logoMochi from 'Assets/logo-mochi.png';
 import './index.css';
-import { useSelector } from 'react-redux';
 
 export default function CardFarm({ token, index, walletAddress, fetchAllFarm, rootUrlsView }) {
   const [loadingApprove, setloadingApprove] = useState(false);
@@ -16,9 +25,45 @@ export default function CardFarm({ token, index, walletAddress, fetchAllFarm, ro
   const [loadingClaim, setLoadingClaim] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
   const [showModalFarm, setShowModalFarm] = useState({ status: false, type: '', symbol: '' });
-  const { apr } = useSelector((state) => state);
+  const [aprPool, setAprPool] = useState(0);
+  const [rewardPerBlock, setRewardPerBlock] = useState(0);
+  const [valueTotalLiquidity, setValueTotalLiquidity] = useState(0);
+
   useEffect(() => {
-    store.dispatch(setApr());
+    const calculateTotalLock = async () => {
+      const USDT = new Token(ChainId.MAINNET, '0xdac17f958d2ee523a2206206994597c13d831ec7', 6);
+      const TokenFarm = new Token(
+        ChainId.MAINNET,
+        '0xbd1848e1491d4308Ad18287A745DD4DB2A4BD55B',
+        18
+      );
+      const WETH_USDTPair = await Fetcher.fetchPairData(WETH[ChainId.MAINNET], USDT);
+      const TOKENFARM_WETHPair = await Fetcher.fetchPairData(TokenFarm, WETH[ChainId.MAINNET]);
+
+      const route = new Route([TOKENFARM_WETHPair, WETH_USDTPair], TokenFarm);
+
+      let price = route.midPrice.toSignificant(6);
+      let totalToekLP =
+        (await store.dispatch(
+          fecthTotalTokenLP(token.addressLP, token.contractFarm, token.moma)
+        )) >=
+        10 ** 16
+          ? (await store.dispatch(
+              fecthTotalTokenLP(token.addressLP, token.contractFarm, token.moma)
+            )) /
+            10 ** 18
+          : 0;
+      let valueTotalLiquidity = parseInt(totalToekLP * price);
+      valueTotalLiquidity = valueTotalLiquidity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      setValueTotalLiquidity(valueTotalLiquidity);
+    };
+
+    const fetchDataPool = async () => {
+      setAprPool(await store.dispatch(fecthAprPool(token.addressLP, token.contractFarm)));
+      setRewardPerBlock(await store.dispatch(fecthRewardPerBlock(token.contractFarm)));
+    };
+    fetchDataPool();
+    calculateTotalLock();
   });
 
   async function approveTokenFarm(addressFarm, index) {
@@ -56,20 +101,11 @@ export default function CardFarm({ token, index, walletAddress, fetchAllFarm, ro
           <div className='info-pool textmode'>
             <h2 className='textmode'>{token.namePair}</h2>
             <div className='box-multi'>
-              <div className='text-core'>
-                <svg
-                  viewBox='0 0 24 24'
-                  color='secondary'
-                  width='20px'
-                  xmlns='http://www.w3.org/2000/svg'
-                  className='sc-bdvvaa jJFERw'
-                >
-                  <path d='M23 12L20.56 9.21L20.9 5.52L17.29 4.7L15.4 1.5L12 2.96L8.6 1.5L6.71 4.69L3.1 5.5L3.44 9.2L1 12L3.44 14.79L3.1 18.49L6.71 19.31L8.6 22.5L12 21.03L15.4 22.49L17.29 19.3L20.9 18.48L20.56 14.79L23 12ZM9.38 16.01L7 13.61C6.61 13.22 6.61 12.59 7 12.2L7.07 12.13C7.46 11.74 8.1 11.74 8.49 12.13L10.1 13.75L15.25 8.59C15.64 8.2 16.28 8.2 16.67 8.59L16.74 8.66C17.13 9.05 17.13 9.68 16.74 10.07L10.82 16.01C10.41 16.4 9.78 16.4 9.38 16.01Z'></path>
-                </svg>
-                <span>Core</span>
-              </div>
               <div className='multier-pool'>
-                <h3>40X</h3>
+                <h3>
+                  {parseBalance(rewardPerBlock, 12) * 3}{' '}
+                  <span className='moma-per-block'>{token.symbolEarn}/Block</span>
+                </h3>
               </div>
             </div>
           </div>
@@ -92,7 +128,7 @@ export default function CardFarm({ token, index, walletAddress, fetchAllFarm, ro
                 <path d='M8 18H9.5V16H11.5V14.5H9.5V12.5H8V14.5H6V16H8V18Z'></path>
                 <path d='M14.09 10.95L15.5 9.54L16.91 10.95L17.97 9.89L16.56 8.47L17.97 7.06L16.91 6L15.5 7.41L14.09 6L13.03 7.06L14.44 8.47L13.03 9.89L14.09 10.95Z'></path>
               </svg>
-              <span>{apr}%</span>
+              <span>{aprPool}%</span>
             </div>
           </div>
           <div className='show-earn textmode'>
@@ -234,12 +270,12 @@ export default function CardFarm({ token, index, walletAddress, fetchAllFarm, ro
           {showDetail ? (
             <div className='detail-pool-stake'>
               <div className='total-liquidity textmode'>
-                {/* <div className='title-liquidity'>Total Liquidity: </div>
-                <div className='amount-liquidity'>$1,268,255,353 </div> */}
+                <div className='title-liquidity'>Total Liquidity: </div>
+                <div className='amount-liquidity'>${valueTotalLiquidity} </div>
               </div>
               <div className='redirect-swap'>
                 <a
-                  href={`${rootUrlsView.addLP}${token.token0}/${token.addressAddLP}`}
+                  href={`${rootUrlsView.addLP}${token.token0}/${token.moma}`}
                   target='_blank'
                   rel='noreferrer'
                 >

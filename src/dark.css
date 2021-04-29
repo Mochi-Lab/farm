@@ -181,3 +181,7 @@ html[data-theme='dark'] {
   border: 1px solid #ff70b7;
   color: #ff70b7;
 }
+
+[data-theme='dark'] .staking-view .list-staking .item-staking .content-item .wrap-show-vesting {
+  background: rgb(0 0 0 / 31%);
+}
