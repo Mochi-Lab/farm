@@ -236,7 +236,7 @@ export const fecthAprPool = (addressLP, contractFarm) => async (dispatch, getSta
     const totalLpTokenInPool = await pair.methods.balanceOf(contractFarm).call();
     const reserves = await pair.methods.getReserves().call();
     const totalSupply = await pair.methods.totalSupply().call();
-    const LpTokenPriceMoma = (reserves[1] * 2) / totalSupply;
+    const LpTokenPriceMoma = (reserves[0] * 2) / totalSupply;
     const poolLiquidityMoma = totalLpTokenInPool * LpTokenPriceMoma;
     const yearlyMomaRewardAllocation = 6215038 * 10 ** 18;
     let apr = (yearlyMomaRewardAllocation / poolLiquidityMoma) * 100;
