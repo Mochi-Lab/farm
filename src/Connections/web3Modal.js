@@ -9,8 +9,8 @@ const providerOptions = {
     package: WalletConnectProvider,
     options: {
       rpc: {
-        56: 'https://bsc-dataseed.binance.org/',
-        97: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
+        // 56: 'https://bsc-dataseed.binance.org/',
+        // 97: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
         1: 'https://mainnet.infura.io/v3/bd65aacb68614592bb014d78c92a9786',
         4: 'https://rinkeby.infura.io/v3/bd65aacb68614592bb014d78c92a9786',
       },
@@ -25,7 +25,7 @@ const providerOptions = {
 export const connectWeb3Modal = async () => {
   const web3Modal = new Web3Modal({
     cacheProvider: false, // optional
-    network: 'binance',
+    network: 'mainnet',
     providerOptions, // required
   });
 
