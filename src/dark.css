@@ -38,8 +38,6 @@ html[data-theme='dark'] {
 [data-theme='dark'] .menu-bar,
 .background-mode {
   background-color: var(--background-color) !important;
-  border-bottom: solid 1px rgb(38 38 38) !important;
-  box-shadow: 0 0 12px #616161;
 }
 
 [data-theme='dark'] .background-airdrop-mode,
