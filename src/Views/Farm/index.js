@@ -65,7 +65,7 @@ export default function Farm() {
   }, 5000);
 
   return (
-    <div className='staking-view'>
+    <div className='staking-view background-mode'>
       <div className='container'>
         {/* <CountDownTime className='countdown-stake' /> */}
         <div className='list-staking'>
