@@ -185,3 +185,7 @@ html[data-theme='dark'] {
 [data-theme='dark'] .staking-view .list-staking .item-staking .content-item .wrap-show-vesting {
   background: rgb(0 0 0 / 31%);
 }
+[data-theme='dark'] .ant-btn.barsMenu {
+  background: #262626;
+  color: white;
+}
