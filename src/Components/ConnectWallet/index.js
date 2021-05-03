@@ -1,29 +1,21 @@
 import { Button, Badge } from 'antd';
 import { connectWeb3Modal } from 'Connections/web3Modal';
 import { useSelector } from 'react-redux';
+import LogoutWallet from 'Components/Logout';
 
 export default function ConnectWallet() {
-  const { walletAddress, shortAddress } = useSelector((state) => state);
+  const { walletAddress } = useSelector((state) => state);
 
   const connect = () => {
     connectWeb3Modal();
   };
 
-  return (
-    <>
-      <Button shape='round' onClick={() => connect()}>
-        {!!walletAddress ? (
-          <>
-            <Badge status='success' />
-            {shortAddress}
-          </>
-        ) : (
-          <>
-            <Badge status='error' />
-            Connect Wallet
-          </>
-        )}
-      </Button>
-    </>
+  return !!walletAddress ? (
+    <LogoutWallet />
+  ) : (
+    <Button className='pink-font bt-cnlo' shape='round' onClick={() => connect()}>
+      <Badge status='error' />
+      Connect Wallet
+    </Button>
   );
 }

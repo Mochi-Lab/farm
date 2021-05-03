@@ -4,10 +4,17 @@ import Farm from 'Contracts/farm/Farm.json';
 import Vesting from 'Contracts/farm/Vesting.json';
 import Pair from 'Contracts/UniswapV2Pair.json';
 import { message } from 'antd';
+import { getWeb3List, networkDefault } from 'utils/getWeb3List';
 
 ////////////////////
 // Common
 ////////////////////
+export const LOGOUT = 'LOGOUT';
+export const logout = () => (dispatch, getState) => {
+  dispatch(setWeb3(getWeb3List(networkDefault).web3Default));
+  dispatch(setChainId(networkDefault));
+  dispatch({ type: LOGOUT });
+};
 
 export const SET_WEB3 = 'SET_WEB3';
 export const setWeb3 = (web3) => async (dispatch, getState) => {
@@ -194,16 +201,17 @@ export const fetchVestingTotalClaimableAmount = (contractVesting) => async (disp
 };
 export const fetchTotalAmountLockedByUser = (contractVesting) => async (dispatch, getState) => {
   const { web3, walletAddress } = getState();
-  try {
-    const instaneVesting = new web3.eth.Contract(Vesting.abi, contractVesting);
-    let amountLocking = await instaneVesting.methods
-      .getTotalAmountLockedByUser(walletAddress)
-      .call();
-    return amountLocking;
-  } catch (error) {
-    console.log(error);
-    message.error('Oh no! Something went wrong !');
-  }
+  if (web3)
+    try {
+      const instaneVesting = new web3.eth.Contract(Vesting.abi, contractVesting);
+      let amountLocking = await instaneVesting.methods
+        .getTotalAmountLockedByUser(walletAddress)
+        .call();
+      return amountLocking;
+    } catch (error) {
+      console.log(error);
+      message.error('Oh no! Something went wrong !');
+    }
 };
 
 export const claimTotalVesting = (contractVesting) => async (dispatch, getState) => {
