@@ -149,6 +149,11 @@
   text-align: start;
   font-weight: bold;
 }
+
+.symbol-staked {
+  margin-top: 2.5rem;
+}
+
 .staking-view .list-staking .item-staking .content-item .btn-stake {
   margin-top: 0.5rem;
   margin-bottom: 1.5rem;
@@ -233,7 +238,7 @@
 }
 
 .staking-view .list-staking .item-staking .content-item .show-vesting {
-  margin: 0.5rem 0;
+  margin-top: 2rem;
 }
 .staking-view .list-staking .item-staking .content-item .show-vesting .title-vesting {
   font-weight: bold;
