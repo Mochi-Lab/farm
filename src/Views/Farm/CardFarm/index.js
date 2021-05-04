@@ -155,20 +155,23 @@ export default function CardFarm({
             </div>
           </div>
           {token.claimableAmount > 0 ? (
-            <div className='show-vesting textmode'>
-              <div className='title-vesting'>Locking reward: </div>
-              <div className='token-vesting'>
-                <div className='harvest'>
-                  <Button
-                    disabled={token.claimableAmount <= 0}
-                    onClick={() => claimVesting()}
-                    loading={loadingClaim}
-                  >
-                    Claim All
-                  </Button>
+            <>
+              <div className='title-show-vesting textmode'>Locking reward:</div>
+              <div className='show-vesting textmode'>
+                <div className='amount-vesting'>{parseBalance(token.amountLocking, 18)}</div>
+                <div className='token-vesting'>
+                  <div className='harvest'>
+                    <Button
+                      disabled={token.claimableAmount <= 0}
+                      onClick={() => claimVesting()}
+                      loading={loadingClaim}
+                    >
+                      Claim All
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </div>
+            </>
           ) : null}
 
           <div className='symbol-staked textmode'>
