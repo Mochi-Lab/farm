@@ -10,6 +10,7 @@ const initialState = {
   balance: 0,
   strSearch: '',
   listTokensFarm: [],
+  contractAddress: [],
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -44,6 +45,11 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         listTokensFarm: action.listTokensFarm,
+      };
+    case actions.SET_CONTRACT_ADDRESS:
+      return {
+        ...state,
+        contractAddress: action.contractAddress,
       };
     default:
       return state;

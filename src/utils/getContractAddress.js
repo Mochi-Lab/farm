@@ -1,31 +1,21 @@
 const contractAddress = {
   //BSC Mainnet
   56: {
-    AddressesProvider: '0xc6732Eb8A138052D9e3DFEB66cB0175C94f7e970',
-    NftList: '0xC8224F5511fae865793B4235b1aA02011637e742',
-    Vault: '0xDa5F1f8d32C094a6c0fc21319bA2E5a64265C429',
-    SellOrderList: '0x4786999b7Ebb24876B2bD4705ecc89ECeebDa559',
-    Market: '0xc6A8101003d7d2ce14BD344e3df23E4AAfd77899',
-    CreativeStudio: '0xa5dD241c1A9A9826fB8E78c7db4dc8fdD3043b66',
-    ExchangeOrderList: '0x37ca1D6c7479F3Eb9d6d10309e6f0C611E6bE48F',
-    Mochi: '0x3bF0FD7176204A80021C1BD17807144714E31148',
-    NFTCampaign: '0x823437B58dB6390AE6F9bCee696788F854618c40',
+    USDT: { address: '0x55d398326f99059fF775485246999027B3197955', symbol: 'USDT', decimals: '18' },
+    NATIVE: {
+      address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+      symbol: 'WBNB',
+      decimals: '18',
+    }, // WBNB
   },
   //BSC Testnet
-  97: {
-    AddressesProvider: '0x78de5478Eb3649C6894ce545A11c84e56077c26f',
-    CreativeStudio: '0xc42e002888d55002982F9a902b3d1517f528FB4B',
-    ExchangeOrderList: '0x371Ac863d7af19dE85a521d10aB5eAa90718D261',
-    Market: '0x2184994315dF10eeBD938CfaE7289eD30C8bAdE8',
-    NftList: '0xE203287a41B56845652e6607A947e913ADd01E69',
-    SellOrderList: '0x7E6A22965E26E9A5C9CEd3FDb7df8B7325848802',
-    Vault: '0x2361A85d39686A27689051624e7Dd5a0DF1A0693',
-    SeedifyNFT: '0xfA66C3001E0B3f9c6c203f5bBE483D121B28Ae6D',
-    NFTCampaign: '0x23442A5094aC64f1B54D07a199e79738f56bdbfE',
-    Mochi: '0x254d7BEc0dc2644B58Ddb4f04Bd6C0144ea32E19',
-  },
+  97: {},
   4: {},
-  1: {},
+  1: {
+    USDT: { address: '0xdac17f958d2ee523a2206206994597c13d831ec7', symbol: 'USDT', decimals: 6 },
+    NATIVE: { address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', symbol: 'WETH', decimals: 18 }, // WETH
+    PairUsdtNative: '0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852', // pair USDT-WETH
+  },
 };
 
 const listTokensFarm = {
@@ -34,11 +24,11 @@ const listTokensFarm = {
       namePair: 'MOMA-ETH',
       addressLP: '0x611ABC072ee91c0cc19FFEf97ac7E69A1A7A17eC',
       moma: '0xbd1848e1491d4308Ad18287A745DD4DB2A4BD55B',
-      viewContractPair: '0x611ABC072ee91c0cc19FFEf97ac7E69A1A7A17eC',
       contractFarm: '0x8d05f3bef44f3b4cd83427c83c2a4021a5e120d2',
       contractVesting: '0xECDa3345f3018f1f911a53Fa42A96802ba7A463f',
       token0: 'ETH', // it can be an address or a symbol
       symbolEarn: 'MOMA',
+      decimalsMoma: 18,
       allowanceFarm: 0,
       pendingReward: 0,
       amountStake: 0,
@@ -53,7 +43,6 @@ const listTokensFarm = {
       namePair: 'MOMA-ETH',
       addressLP: '0x96CDd5E2a888ebb97200a81D3710fdc1711cbB77',
       moma: '0xFF02166F7ef6F03b18fB7c6e23d30430202Ef9A2',
-      viewContractPair: '0x96CDd5E2a888ebb97200a81D3710fdc1711cbB77',
       contractFarm: '0x5dDe01967C5D0483C81c4336DabEBC50BBEeF5e7',
       contractVesting: '0xcb2690a7DE1f6AC9C05aD910c2b3d1Ca429250AB',
       token0: 'ETH', // it can be an address or a symbol

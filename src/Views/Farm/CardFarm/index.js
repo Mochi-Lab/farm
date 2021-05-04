@@ -9,9 +9,8 @@ import {
   fecthAprPool,
   fecthRewardPerBlock,
   fecthTotalTokenLP,
+  fecthPriceTokenWithUSDT,
 } from 'store/actions';
-
-import { ChainId, Token, WETH, Fetcher, Route } from '@uniswap/sdk';
 
 import { parseBalance } from 'utils/helper';
 import ModalFarm from 'Views/Farm/ModalFarm';
@@ -19,7 +18,14 @@ import store from 'store/index';
 import logoMochi from 'Assets/logo-mochi.png';
 import './index.css';
 
-export default function CardFarm({ token, index, walletAddress, fetchAllFarm, rootUrlsView }) {
+export default function CardFarm({
+  token,
+  index,
+  walletAddress,
+  fetchAllFarm,
+  rootUrlsView,
+  contractAddress,
+}) {
   const [loadingApprove, setloadingApprove] = useState(false);
   const [loadingHarvest, setLoadingHarvest] = useState(false);
   const [loadingClaim, setLoadingClaim] = useState(false);
@@ -31,18 +37,12 @@ export default function CardFarm({ token, index, walletAddress, fetchAllFarm, ro
 
   useEffect(() => {
     const calculateTotalLock = async () => {
-      const USDT = new Token(ChainId.MAINNET, '0xdac17f958d2ee523a2206206994597c13d831ec7', 6);
-      const TokenFarm = new Token(
-        ChainId.MAINNET,
-        '0xbd1848e1491d4308Ad18287A745DD4DB2A4BD55B',
-        18
+      let priceToken = await store.dispatch(
+        fecthPriceTokenWithUSDT(contractAddress, token.addressLP, token.moma, token.decimalsMoma)
       );
-      const WETH_USDTPair = await Fetcher.fetchPairData(WETH[ChainId.MAINNET], USDT);
-      const TOKENFARM_WETHPair = await Fetcher.fetchPairData(TokenFarm, WETH[ChainId.MAINNET]);
 
-      const route = new Route([TOKENFARM_WETHPair, WETH_USDTPair], TokenFarm);
+      priceToken = !!priceToken && priceToken > 0 ? priceToken : 0;
 
-      let price = route.midPrice.toSignificant(6);
       let totalToekLP =
         (await store.dispatch(
           fecthTotalTokenLP(token.addressLP, token.contractFarm, token.moma)
@@ -53,7 +53,7 @@ export default function CardFarm({ token, index, walletAddress, fetchAllFarm, ro
             )) /
             10 ** 18
           : 0;
-      let valueTotalLiquidity = parseInt(totalToekLP * price);
+      let valueTotalLiquidity = parseInt(totalToekLP * priceToken);
       valueTotalLiquidity = valueTotalLiquidity.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
       setValueTotalLiquidity(valueTotalLiquidity);
     };
@@ -293,7 +293,7 @@ export default function CardFarm({ token, index, walletAddress, fetchAllFarm, ro
               </div>
               <div className='view-contract-pool'>
                 <a
-                  href={`${rootUrlsView.viewContract}${token.viewContractPair}`}
+                  href={`${rootUrlsView.viewContract}${token.addressLP}`}
                   target='_blank'
                   rel='noreferrer'
                 >
@@ -311,7 +311,7 @@ export default function CardFarm({ token, index, walletAddress, fetchAllFarm, ro
               </div>
               <div className='see-pair-info'>
                 <a
-                  href={`${rootUrlsView.seePairInfo}${token.viewContractPair}`}
+                  href={`${rootUrlsView.seePairInfo}${token.addressLP}`}
                   target='_blank'
                   rel='noreferrer'
                 >
