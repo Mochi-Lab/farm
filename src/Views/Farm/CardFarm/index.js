@@ -154,35 +154,23 @@ export default function CardFarm({
               </Button>
             </div>
           </div>
-          <div className='wrap-show-vesting'>
+          {token.claimableAmount > 0 ? (
             <div className='show-vesting textmode'>
-              <div className='title-vesting'>Vesting Duration: </div>
+              <div className='title-vesting'>Locking reward: </div>
               <div className='token-vesting'>
-                <h3 className='textmode'>6 month</h3>
+                <div className='harvest'>
+                  <Button
+                    disabled={token.claimableAmount <= 0}
+                    onClick={() => claimVesting()}
+                    loading={loadingClaim}
+                  >
+                    Claim All
+                  </Button>
+                </div>
               </div>
             </div>
-            <div className='show-vesting textmode'>
-              <div className='title-vesting'>{token.symbolEarn} locking: </div>
-              <div className='token-vesting'>
-                <h3 className='textmode'>{parseBalance(token.amountLocking, 18)}</h3>
-              </div>
-            </div>
-            <div className='title-amount-claimable textmode'>Claimable Amount</div>
-            <div className='wrap-amount-stake textmode'>
-              <div className='token-earn'>
-                <h3 className='textmode'>{parseBalance(token.claimableAmount, 18)}</h3>
-              </div>
-              <div className='harvest'>
-                <Button
-                  disabled={token.claimableAmount <= 0}
-                  onClick={() => claimVesting()}
-                  loading={loadingClaim}
-                >
-                  Claim
-                </Button>
-              </div>
-            </div>
-          </div>
+          ) : null}
+
           <div className='symbol-staked textmode'>
             {token.namePair} LP <span className='blur-text textmode'>STAKED</span>
           </div>
