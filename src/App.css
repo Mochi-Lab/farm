@@ -9,6 +9,14 @@
   box-shadow: 0 0 12px #f3f1f1;
 }
 
+.pink-font {
+  color: #e35188 !important;
+}
+
+.bt-cnlo:hover {
+  border-color: #e35188 !important;
+}
+
 .ant-select-selector {
   border-radius: 1rem !important;
 }

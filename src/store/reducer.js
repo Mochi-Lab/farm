@@ -8,13 +8,20 @@ const initialState = {
   shortAddress: null,
   adminAddress: null,
   balance: 0,
-  strSearch: '',
   listTokensFarm: [],
   contractAddress: [],
 };
 
 const rootReducer = (state = initialState, action) => {
   switch (action.type) {
+    case actions.LOGOUT:
+      return {
+        ...state,
+        walletAddress: null,
+        shortAddress: null,
+        adminAddress: null,
+        balance: 0,
+      };
     case actions.SET_WEB3:
       return {
         ...state,

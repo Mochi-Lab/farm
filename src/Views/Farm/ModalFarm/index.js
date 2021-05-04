@@ -35,7 +35,6 @@ export default function ModalFarm({ showModalFarm, setShowModalFarm, token, fetc
   }
 
   async function handleChangeAmoun(amount) {
-    console.log(amount);
     if (showModalFarm.type === 'stake') {
       if (amount > parseBalance(token.balanceLP, 18)) {
         setAmountLP(parseBalance(token.balanceLP, 18));

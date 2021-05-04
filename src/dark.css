@@ -136,7 +136,8 @@ html[data-theme='dark'] {
   border: 1px solid #b7b7b7 !important;
 }
 [data-theme='dark'] .rightMenu .ant-menu-item .ant-btn {
-  border-color: #777;
+  border-color: #803954;
+  background-color: var(--background-color) !important;
 }
 [data-theme='dark'] .input-mode-bc {
   background-color: #525252 !important;
