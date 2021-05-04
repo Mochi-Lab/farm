@@ -16,7 +16,7 @@
 
 .menu-bar {
   z-index: 2;
-  position: fixed;
+  position: relative;
   width: 100%;
   top: 0px;
   transform: translate3d(0px, 0px, 0px);
@@ -64,7 +64,7 @@
 
 .menuCon .leftMenu {
   float: left;
-  margin-left: 2rem;
+  margin-left: 0.5rem;
 }
 
 .ant-menu-submenu-expand-icon,
@@ -72,6 +72,29 @@
   right: 50px !important;
 }
 
+.left-menu {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: stretch;
+}
+
+.connect-and-dark-mode {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  align-content: stretch;
+}
+
+.style-dark-mode {
+  position: relative;
+  margin-left: 0.75rem;
+  margin-right: 3rem;
+}
 @media (max-width: 1437px) {
   .leftMenu {
     width: 20%;
@@ -113,11 +136,38 @@
     display: block !important;
   }
 
-  .rightMenu {
-    display: none;
-  }
-
   .leftMenu {
     width: 100%;
+  }
+}
+@media (max-width: 568px) {
+  .left-menu {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    align-content: stretch;
+    padding-bottom: 0.5rem;
+  }
+
+  .rightMenu .ant-menu-item.ant-menu-item-only-child {
+    margin: 0 5px;
+  }
+
+  .connect-and-dark-mode {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: flex-end;
+    align-content: stretch;
+  }
+
+  .style-connect {
+    padding: 10px 0 10px 0;
+  }
+  .style-dark-mode {
+    margin-right: 0;
   }
 }

@@ -20,7 +20,6 @@ function App() {
     <div style={{ height: '100vh' }}>
       <BrowserRouter>
         <div className='page content'>
-          <div className='bg-header'></div>
           <NavBar />
           <Suspense
             fallback={

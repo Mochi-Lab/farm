@@ -5,7 +5,6 @@
 .menu-bar {
   padding: 0 20px;
   border-bottom: solid 1px #e8e8e8;
-  overflow: hidden;
   box-shadow: 0 0 12px #f3f1f1;
 }
 
@@ -42,7 +41,11 @@
 
 .alignItem {
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
   align-items: center;
+  align-content: stretch;
 }
 
 .justifyContent {
@@ -51,7 +54,7 @@
 }
 
 .logo {
-  width: 75px;
+  width: 60px;
   height: 75px;
   float: left;
 }
@@ -59,7 +62,7 @@
 .logo a {
   display: inline-block;
   font-size: 20px;
-  padding: 10px 0 10px 20px;
+  padding: 10px 0 10px 0px;
   text-transform: capitalize;
 }
 
@@ -89,8 +92,8 @@
   border-bottom: none;
 }
 
-.menuCon .rightMenu {
-  float: right;
+.rightMenu ul {
+  border-right: none;
 }
 
 .barsMenu {
@@ -153,10 +156,6 @@
     margin-top: 0;
   }
 
-  .rightMenu {
-    display: none;
-  }
-
   .menuCon {
     padding-top: 0;
     display: flex;
@@ -208,23 +207,6 @@
   flex-direction: column;
   z-index: 0;
   -webkit-box-flex: 1;
-}
-
-.bg-header {
-  position: relative;
-  margin: 0px;
-  padding: 0px;
-  -webkit-box-align: stretch;
-  align-items: stretch;
-  border-width: 0px;
-  border-style: solid;
-  border-color: rgb(4, 4, 5);
-  display: flex;
-  flex-basis: auto;
-  flex-direction: column;
-  flex-shrink: 0;
-  z-index: 0;
-  height: 75px;
 }
 
 .PE.is-expand-img {
@@ -307,17 +289,14 @@ div.line-loading {
 
 @media (max-width: 992px) {
   .logo {
-    width: 85px;
+    width: 60px;
   }
 }
 
 @media (max-width: 768px) {
-  .bg-header {
-    height: 60px;
-  }
   .logo {
-    width: 75px;
-    height: 60px;
+    width: 60px;
+    height: 70px;
   }
   .logo a img {
     width: 50px;
@@ -333,10 +312,4 @@ div.line-loading {
 .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item-selected,
 .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-submenu-selected {
   border-bottom: 0 !important;
-}
-
-@media (max-width: 576px) {
-  .menuCon {
-    width: calc(100% - 90px);
-  }
 }

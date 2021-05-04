@@ -4,15 +4,12 @@ import Farm from 'Contracts/farm/Farm.json';
 import Vesting from 'Contracts/farm/Vesting.json';
 import Pair from 'Contracts/UniswapV2Pair.json';
 import { message } from 'antd';
-import { getWeb3List, networkDefault } from 'utils/getWeb3List';
 
 ////////////////////
 // Common
 ////////////////////
 export const LOGOUT = 'LOGOUT';
 export const logout = () => (dispatch, getState) => {
-  dispatch(setWeb3(getWeb3List(networkDefault).web3Default));
-  dispatch(setChainId(networkDefault));
   dispatch({ type: LOGOUT });
 };
 
@@ -47,7 +44,7 @@ export const setAdminAddress = (addressesProvider) => async (dispatch) => {
 
 export const SET_ADDRESS = 'SET_ADDRESS';
 export const setAddress = (walletAddress) => (dispatch) => {
-  if (walletAddress !== null) {
+  if (!!walletAddress) {
     var shortAddress = `${walletAddress.slice(0, 8)}...${walletAddress.slice(
       walletAddress.length - 6,
       walletAddress.length
@@ -88,7 +85,7 @@ export const approveFarm = (addressToken, contractFarm) => async (dispatch, getS
       })
       .on('error', (error, receipt) => {
         console.log(error);
-        message.error('Oh no! Something went wrong !');
+        // message.error('Approve Error !');
         return false;
       });
   } catch (error) {
@@ -105,26 +102,28 @@ export const checkAllowanceFarm = (addressToken, contractFarm) => async (dispatc
     return allowance;
   } catch (error) {
     console.log(error);
-    message.error('Oh no! Something went wrong !');
+    // message.error('Fetch Allowance Error');
   }
 };
 
-export const depositFarm = (amount, contractFarm) => async (dispatch, getState) => {
+export const depositFarm = (amountWei, contractFarm) => async (dispatch, getState) => {
   const { web3, walletAddress } = getState();
-
   try {
     const instaneFarm = new web3.eth.Contract(Farm.abi, contractFarm);
-    const amountWei = web3.utils.toWei(amount.toString(), 'ether');
     await instaneFarm.methods
       .deposit(amountWei)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
-        message.success('Deposit Successfully !');
+        if (amountWei === 0) {
+          message.success('Harvest Successfully !');
+        } else {
+          message.success('Deposit Successfully !');
+        }
         return true;
       })
       .on('error', (error, receipt) => {
         console.log(error);
-        message.error('Oh no! Something went wrong !');
+        // message.error('Deposit Error !');
         return false;
       });
   } catch (error) {
@@ -133,11 +132,10 @@ export const depositFarm = (amount, contractFarm) => async (dispatch, getState) 
   }
 };
 
-export const withdrawFarm = (amount, contractFarm) => async (dispatch, getState) => {
+export const withdrawFarm = (amountWei, contractFarm) => async (dispatch, getState) => {
   const { web3, walletAddress } = getState();
   try {
     const instaneFarm = new web3.eth.Contract(Farm.abi, contractFarm);
-    const amountWei = web3.utils.toWei(amount.toString(), 'ether');
     await instaneFarm.methods
       .withdraw(amountWei)
       .send({ from: walletAddress })
@@ -147,7 +145,7 @@ export const withdrawFarm = (amount, contractFarm) => async (dispatch, getState)
       })
       .on('error', (error, receipt) => {
         console.log(error);
-        message.error('Oh no! Something went wrong !');
+        // message.error('Withdraw Error !');
         return false;
       });
   } catch (error) {
@@ -164,7 +162,7 @@ export const fetchPendingReward = (contractFarm) => async (dispatch, getState) =
     return pendingReward;
   } catch (error) {
     console.log(error);
-    message.error('Oh no! Something went wrong !');
+    // message.error('Fetch Pending Reward Error !');
   }
 };
 export const fetchAmountStake = (contractFarm) => async (dispatch, getState) => {
@@ -175,7 +173,7 @@ export const fetchAmountStake = (contractFarm) => async (dispatch, getState) => 
     return amountStake.amount;
   } catch (error) {
     console.log(error);
-    message.error('Oh no! Something went wrong !');
+    // message.error('Fetch Amount Stake Error!');
   }
 };
 
@@ -187,43 +185,45 @@ export const fetchBalanceLP = (addressToken) => async (dispatch, getState) => {
     return balanceLP;
   } catch (error) {
     console.log(error);
-    message.error('Oh no! Something went wrong !');
+    // message.error('Fetch Balance LP Error!');
   }
 };
 
 export const fetchVestingTotalClaimableAmount = (contractVesting) => async (dispatch, getState) => {
   const { web3, walletAddress } = getState();
-  try {
-    const instaneVesting = new web3.eth.Contract(Vesting.abi, contractVesting);
-    let amountClaumable = await instaneVesting.methods
-      .getVestingTotalClaimableAmount(walletAddress)
-      .call();
-    return amountClaumable;
-  } catch (error) {
-    console.log(error);
-    message.error('Oh no! Something went wrong !');
+  if (contractVesting !== '0x0000000000000000000000000000000000000000') {
+    try {
+      const vestingInstance = new web3.eth.Contract(Vesting.abi, contractVesting);
+      let claimableAmount = await vestingInstance.methods
+        .getVestingTotalClaimableAmount(walletAddress)
+        .call();
+      return claimableAmount;
+    } catch (error) {
+      console.log(error);
+      // message.error('Fetch Vesting Claimable Error!');
+    }
   }
 };
 export const fetchTotalAmountLockedByUser = (contractVesting) => async (dispatch, getState) => {
   const { web3, walletAddress } = getState();
-  if (web3)
+  if (web3 && contractVesting !== '0x0000000000000000000000000000000000000000')
     try {
-      const instaneVesting = new web3.eth.Contract(Vesting.abi, contractVesting);
-      let amountLocking = await instaneVesting.methods
+      const vestingInstance = new web3.eth.Contract(Vesting.abi, contractVesting);
+      let amountLocking = await vestingInstance.methods
         .getTotalAmountLockedByUser(walletAddress)
         .call();
       return amountLocking;
     } catch (error) {
       console.log(error);
-      message.error('Oh no! Something went wrong !');
+      // message.error('Fetch Amount Locked Error !');
     }
 };
 
 export const claimTotalVesting = (contractVesting) => async (dispatch, getState) => {
   const { web3, walletAddress } = getState();
   try {
-    const instaneVesting = new web3.eth.Contract(Vesting.abi, contractVesting);
-    await instaneVesting.methods
+    const vestingInstance = new web3.eth.Contract(Vesting.abi, contractVesting);
+    await vestingInstance.methods
       .claimTotalVesting()
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
@@ -232,7 +232,7 @@ export const claimTotalVesting = (contractVesting) => async (dispatch, getState)
       })
       .on('error', (error, receipt) => {
         console.log(error);
-        message.error('Oh no! Something went wrong !');
+        // message.error('Claim Error !');
         return false;
       });
   } catch (error) {
@@ -242,21 +242,32 @@ export const claimTotalVesting = (contractVesting) => async (dispatch, getState)
 };
 
 const roundToTwoDp = (number) => Math.round(number * 100) / 100;
-export const fecthAprPool = (addressLP, contractFarm) => async (dispatch, getState) => {
+export const fecthAprPool = (addressLP, contractFarm, moma, yearlyMomaReward) => async (
+  dispatch,
+  getState
+) => {
   const { web3 } = getState();
   try {
     const pair = new web3.eth.Contract(Pair.abi, addressLP);
     const totalLpTokenInPool = await pair.methods.balanceOf(contractFarm).call();
     const reserves = await pair.methods.getReserves().call();
+    let token0 = await pair.methods.token0().call();
+    let amountMoma = 0;
+    if (token0.toLowerCase() !== moma.toLowerCase()) {
+      amountMoma = reserves[1];
+    } else {
+      amountMoma = reserves[0];
+    }
     const totalSupply = await pair.methods.totalSupply().call();
-    const LpTokenPriceMoma = (reserves[0] * 2) / totalSupply;
+    const LpTokenPriceMoma = (amountMoma * 2) / totalSupply;
     const poolLiquidityMoma = totalLpTokenInPool * LpTokenPriceMoma;
-    const yearlyMomaRewardAllocation = 6215038 * 10 ** 18;
+    const yearlyMomaRewardAllocation = yearlyMomaReward * 10 ** 18;
     let apr = (yearlyMomaRewardAllocation / poolLiquidityMoma) * 100;
     apr = roundToTwoDp(apr);
     return apr;
   } catch (error) {
     console.log(error);
+    // message.error('Fecth Apr Error !');
     return false;
   }
   // const poolLiquidityMoma = totalLpTokenInPool * LpTokenPriceMoma;
@@ -264,7 +275,7 @@ export const fecthAprPool = (addressLP, contractFarm) => async (dispatch, getSta
   // return apr.isNaN() || !apr.isFinite() ? null : apr.toNumber();
 };
 
-export const fecthRewardPerBlock = (contractFarm) => async (dispatch, getState) => {
+export const fecthMultiplier = (contractFarm) => async (dispatch, getState) => {
   const { web3 } = getState();
   try {
     const instaneFarm = new web3.eth.Contract(Farm.abi, contractFarm);
@@ -275,6 +286,7 @@ export const fecthRewardPerBlock = (contractFarm) => async (dispatch, getState) 
     return rewardPerBlock;
   } catch (error) {
     console.log(error);
+    // message.error('Fecth Reward Per Block Error !');
     return false;
   }
 };
@@ -294,7 +306,7 @@ export const fecthTotalTokenLP = (addressTokenLP, addressContractFarm, moma) => 
     return totalTokenLP;
   } catch (error) {
     console.log(error);
-    message.error('Oh no! Something went wrong !');
+    // message.error('Fecth Total Token LP Error !');
   }
 };
 
@@ -313,12 +325,10 @@ export const fecthPriceTokenWithUSDT = (
         contractAddress.PairUsdtNative
       );
       let token0UsdtNative = await instancePairUsdtNative.methods.token0().call();
-      let token1UsdtNative = await instancePairUsdtNative.methods.token1().call();
       let reservesUsdtNaive = await instancePairUsdtNative.methods.getReserves().call();
       let reserves0UsdtNative = reservesUsdtNaive[0],
         reserves1UsdtNative = reservesUsdtNaive[1];
       if (token0UsdtNative.toLowerCase() !== contractAddress.USDT.address.toLowerCase()) {
-        [token0UsdtNative, token1UsdtNative] = [token1UsdtNative, token0UsdtNative];
         [reserves0UsdtNative, reserves1UsdtNative] = [reserves1UsdtNative, reserves0UsdtNative];
       }
       let priceNative =
@@ -329,12 +339,10 @@ export const fecthPriceTokenWithUSDT = (
       // Calculator price of token need check by price native token
       const instancePairTokenNative = new web3.eth.Contract(Pair.abi, pairTokenAndNative);
       let token0TokenNative = await instancePairTokenNative.methods.token0().call();
-      let token1TokenNative = await instancePairTokenNative.methods.token1().call();
       let reservesTokenNaive = await instancePairTokenNative.methods.getReserves().call();
       let reserves0TokenNative = reservesTokenNaive[0],
         reserves1TokenNative = reservesTokenNaive[1];
       if (token0TokenNative.toLowerCase() !== moma.toLowerCase()) {
-        [token0TokenNative, token1TokenNative] = [token1TokenNative, token0TokenNative];
         [reserves0TokenNative, reserves1TokenNative] = [reserves1TokenNative, reserves0TokenNative];
       }
       let priceMoma =
@@ -342,10 +350,26 @@ export const fecthPriceTokenWithUSDT = (
           Math.pow(10, contractAddress.NATIVE.decimals) /
           (reserves0TokenNative / Math.pow(10, decimalsMoma))) *
         priceNative;
+
       return priceMoma;
     }
   } catch (error) {
     console.log(error);
-    message.error('Oh no! Something went wrong !');
+    // message.error('Fecth Price Token Error !');
   }
+};
+
+export const fecthVestingDuration = (contractVesting) => async (dispatch, getState) => {
+  const { web3 } = getState();
+  if (contractVesting !== '0x0000000000000000000000000000000000000000') {
+    try {
+      const vestingInstance = new web3.eth.Contract(Vesting.abi, contractVesting);
+      let vestingDuration = await vestingInstance.methods.vestingDuration().call();
+      return vestingDuration / 195000;
+    } catch (error) {
+      console.log(error);
+      // message.error('Fetch Vesting Claimable Error!');
+    }
+  }
+  return 0;
 };

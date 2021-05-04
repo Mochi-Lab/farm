@@ -1,21 +1,16 @@
-import { Menu, Grid } from 'antd';
 import ConnectWallet from 'Components/ConnectWallet';
 import ToggleDarkMode from 'Components/ToggleDarkMode';
 
-const { useBreakpoint } = Grid;
-
 const RightMenu = () => {
-  const screen = useBreakpoint();
-
   return (
-    <Menu mode={screen.md && screen.lg ? 'horizontal' : 'inline'}>
-      <Menu.Item key='connect-wallet'>
+    <div className='connect-and-dark-mode'>
+      <div className='style-connect'>
         <ConnectWallet />
-      </Menu.Item>
-      <Menu.Item key='dark-mode'>
+      </div>
+      <div className='style-dark-mode'>
         <ToggleDarkMode />
-      </Menu.Item>
-    </Menu>
+      </div>
+    </div>
   );
 };
 

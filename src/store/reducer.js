@@ -20,7 +20,11 @@ const rootReducer = (state = initialState, action) => {
         walletAddress: null,
         shortAddress: null,
         adminAddress: null,
+        web3: null,
+        setChainId: null,
         balance: 0,
+        listTokensFarm: [],
+        contractAddress: [],
       };
     case actions.SET_WEB3:
       return {
