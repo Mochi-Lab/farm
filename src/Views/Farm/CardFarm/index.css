@@ -237,9 +237,15 @@
   margin: 1rem 0;
 }
 
-.staking-view .list-staking .item-staking .content-item .show-vesting {
+.staking-view .list-staking .item-staking .content-item .title-show-vesting {
   margin-top: 2rem;
+  text-align: start;
 }
+
+.staking-view .list-staking .item-staking .content-item .amount-vesting {
+  font-size: 1rem;
+}
+
 .staking-view .list-staking .item-staking .content-item .show-vesting .title-vesting {
   font-weight: bold;
 }
