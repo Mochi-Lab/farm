@@ -1,19 +1,21 @@
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
-import { setChainId, setWeb3, setAddress } from 'store/actions';
+import { setChainId, setWeb3, setAddress, logout } from 'store/actions';
 import store from 'store/index';
+
+const rpcSupport = {
+  1: 'https://mainnet.infura.io/v3/bd65aacb68614592bb014d78c92a9786',
+  4: 'https://rinkeby.infura.io/v3/bd65aacb68614592bb014d78c92a9786',
+  97: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
+  56: 'https://bsc-dataseed.binance.org/',
+};
 
 const providerOptions = {
   walletconnect: {
     package: WalletConnectProvider,
     options: {
-      rpc: {
-        // 56: 'https://bsc-dataseed.binance.org/',
-        // 97: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
-        1: 'https://mainnet.infura.io/v3/bd65aacb68614592bb014d78c92a9786',
-        4: 'https://rinkeby.infura.io/v3/bd65aacb68614592bb014d78c92a9786',
-      },
+      rpc: rpcSupport,
       qrcodeModalOptions: {
         mobileLinks: ['rainbow', 'metamask', 'argent', 'trust', 'imtoken', 'pillar'],
       },
@@ -25,7 +27,7 @@ const providerOptions = {
 export const connectWeb3Modal = async () => {
   const web3Modal = new Web3Modal({
     cacheProvider: false, // optional
-    network: 'mainnet',
+    // network: 'mainnet',
     providerOptions, // required
   });
 
@@ -35,7 +37,7 @@ export const connectWeb3Modal = async () => {
 
   let chainId = await web3.eth.net.getId();
 
-  if (chainId === 1 || chainId === 4) {
+  if (!!rpcSupport[chainId]) {
     let accounts = await web3.eth.getAccounts();
 
     store.dispatch(setChainId(chainId));
@@ -44,6 +46,8 @@ export const connectWeb3Modal = async () => {
     if (accounts.length > 0) {
       store.dispatch(setAddress(accounts[0]));
     }
+  } else {
+    alert('Farming does not support this network');
   }
 
   // Subscribe to accounts change
@@ -52,13 +56,14 @@ export const connectWeb3Modal = async () => {
   });
 
   // Subscribe to chainId change
-  provider.on('chainChanged', (chainId) => {
+  provider.on('chainChanged', async (chainId) => {
     chainId = parseInt(web3.utils.hexToNumber(chainId));
-    if (chainId === 1 || chainId === 4) {
-      store.dispatch(setChainId(chainId));
-      store.dispatch(setWeb3(web3));
+    if (!!rpcSupport[chainId]) {
+      await store.dispatch(setChainId(chainId));
+      await store.dispatch(setWeb3(web3));
     } else {
       alert('Farming does not support this network');
+      await store.dispatch(logout());
     }
   });
 
@@ -71,5 +76,18 @@ export const connectWeb3Modal = async () => {
   provider.on('disconnect', (error) => {
     console.log(error);
     store.dispatch(setAddress(null));
+  });
+};
+
+export const injectNetworkNoEthereum = (params) => {
+  window.ethereum.request({
+    method: 'wallet_addEthereumChain',
+    params: [params],
+  });
+};
+export const injectNetworkInEthereum = (params) => {
+  window.ethereum.request({
+    method: 'wallet_updateChain',
+    params: [params],
   });
 };

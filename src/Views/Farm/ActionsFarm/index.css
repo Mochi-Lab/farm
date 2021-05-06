@@ -1,0 +1,118 @@
+.input-stake-withdraw {
+  width: 100%;
+}
+.input-stake-withdraw .input-stake-withdraw {
+  width: 100%;
+}
+.input-stake-withdraw .actions-farm {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  align-content: stretch;
+  width: 100%;
+}
+
+.actions-farm .action-stake,
+.actions-farm .action-witdraw {
+  width: 48.9%;
+}
+
+.actions-farm .action-stake {
+  padding-right: 0.15rem;
+}
+.actions-farm .action-witdraw {
+  padding-left: 0.15rem;
+}
+
+.actions-farm .action-stake button,
+.actions-farm .action-witdraw button {
+  width: 100%;
+  border-radius: 0.75rem;
+}
+
+.input-stake-withdraw .actions-farm .action-stake .ant-btn,
+.input-stake-withdraw .actions-farm .action-witdraw .ant-btn {
+  background: #e35188;
+  border-color: #e35188;
+  color: white;
+}
+
+.input-stake-withdraw .input-amount {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  align-content: stretch;
+  margin: 0.5rem 0;
+}
+.input-stake-withdraw .input-amount .ant-input-number {
+  border-radius: 0.75rem;
+}
+
+.input-stake-withdraw .input-amount .ant-input-number-handler-wrap {
+  display: none;
+}
+
+.input-stake-withdraw .input-amount .input-amount-stake,
+.input-stake-withdraw .input-amount .input-amount-unstake {
+  width: 48.9%;
+  border: 1px solid rgb(0 0 0 / 1%);
+  border-radius: 0.75rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  align-content: stretch;
+  background: rgb(190 190 190 / 25%);
+}
+
+.input-stake-withdraw .input-amount .input-amount-stake:hover,
+.input-stake-withdraw .input-amount .input-amount-unstake:hover {
+  background: rgb(0 0 0 / 20%);
+}
+
+.input-stake-withdraw .input-amount .input-amount-stake {
+  margin-right: 0.15rem;
+}
+.input-stake-withdraw .input-amount .input-amount-unstake {
+  margin-left: 0.15rem;
+}
+
+.input-stake-withdraw .input-amount .input-amount-stake .ant-input-number,
+.input-stake-withdraw .input-amount .input-amount-unstake .ant-input-number {
+  width: 78%;
+  background: white;
+  border-radius: 0.75rem;
+}
+.input-stake-withdraw .input-amount .input-amount-stake .btn-max,
+.input-stake-withdraw .input-amount .input-amount-unstake .btn-max {
+  width: 24%;
+  padding: 0.6rem 0.1rem;
+  font-size: 0.7rem;
+  height: 100%;
+  height: 38px;
+  cursor: pointer;
+}
+
+.staked-lp-amount,
+.balance-lp-amount {
+  font-size: 1rem;
+}
+
+.balance-lp-and-staked {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: stretch;
+  align-content: stretch;
+}
+.balance-lp,
+.staked-lp {
+  width: 48.9%;
+  text-align: start;
+}

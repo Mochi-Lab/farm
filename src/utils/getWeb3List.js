@@ -21,7 +21,7 @@ export const web3Default = {
         'https://rinkeby.infura.io/v3/bd65aacb68614592bb014d78c92a9786'
       )
     ),
-    name: 'Rinkeby Test Network',
+    name: 'Rinkeby Testnet',
     explorer: 'https://rinkeby.etherscan.io',
   },
   1: {
@@ -35,8 +35,58 @@ export const web3Default = {
   },
 };
 
-export const networkDefault = 1;
+export const listInjectNetwork = {
+  1: {
+    chainId: '0x1',
+    chainName: 'Ethereum',
+    nativeCurrency: {
+      name: 'Ethereum',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    rpcUrls: ['https://mainnet.infura.io/v3'],
+    blockExplorerUrls: ['https://etherscan.com'],
+  },
+  4: {
+    chainId: '0x4',
+    chainName: 'Rinkeby',
+    nativeCurrency: {
+      name: 'Rinkeby',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    rpcUrls: ['https://mainnet.infura.io/v3'],
+    blockExplorerUrls: ['https://rinkeby.etherscan.io'],
+  },
+  56: {
+    chainId: '0x38',
+    chainName: 'Binance Smart Chain',
+    nativeCurrency: {
+      name: 'Binance Coin',
+      symbol: 'BNB',
+      decimals: 18,
+    },
+    rpcUrls: ['https://bsc-dataseed.binance.org'],
+    blockExplorerUrls: ['https://bscscan.com'],
+  },
+  97: {
+    chainId: '0x61',
+    chainName: 'BSC-Testnet',
+    nativeCurrency: {
+      name: 'BNB',
+      symbol: 'BNB',
+      decimals: 18,
+    },
+    rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
+    blockExplorerUrls: ['https://testnet.bscscan.com/'],
+  },
+};
+
+export const networkDefault = 4;
 
 export const getWeb3List = (_chainId) => {
   return web3Default[_chainId];
+};
+export const getInjectNetwork = (_chainId) => {
+  return listInjectNetwork[_chainId];
 };

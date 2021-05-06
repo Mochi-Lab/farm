@@ -1,3 +1,7 @@
+import Artboard1 from 'Assets/icons/Artboard1.png';
+import Artboard2 from 'Assets/icons/Artboard2.png';
+import Artboard3 from 'Assets/icons/Artboard3.png';
+
 const contractAddress = {
   //BSC Mainnet
   56: {
@@ -9,8 +13,24 @@ const contractAddress = {
     }, // WBNB
   },
   //BSC Testnet
-  97: {},
-  4: {},
+  97: {
+    USDT: { address: '0x82a75255DCFDA994FE89A1023F7CD1c6C7D19740', symbol: 'USDT', decimals: '18' },
+    NATIVE: {
+      address: '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
+      symbol: 'WBNB',
+      decimals: '18',
+    }, // WBNB
+    PairUsdtNative: '0xd57c0c65a8e7b7Fb0a81B9b2ba70Ce11372599d0', // pair USDT-WBNB
+  },
+  4: {
+    USDT: { address: '0x24F90eC26AfFacc9CacC34829D350078f79a8A6a', symbol: 'USDT', decimals: '18' },
+    NATIVE: {
+      address: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
+      symbol: 'WETH',
+      decimals: '18',
+    }, // WETH
+    PairUsdtNative: '0xA7AA6f2D58D7009205a916C52CfedF0edD56749a', // pair USDT-WETH
+  },
   1: {
     USDT: { address: '0xdac17f958d2ee523a2206206994597c13d831ec7', symbol: 'USDT', decimals: 6 },
     NATIVE: { address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', symbol: 'WETH', decimals: 18 }, // WETH
@@ -18,9 +38,10 @@ const contractAddress = {
   },
 };
 
-const listTokensFarm = {
+const listTokensFarmDefault = {
   1: [
     {
+      icon: Artboard1,
       namePair: 'MOMA-ETH',
       addressLP: '0x611ABC072ee91c0cc19FFEf97ac7E69A1A7A17eC',
       moma: '0xbd1848e1491d4308Ad18287A745DD4DB2A4BD55B',
@@ -35,11 +56,15 @@ const listTokensFarm = {
       balanceLP: 0,
       claimableAmount: 0,
       amountLocking: 0,
+      vestingDuration: 0,
       apr: 0,
+      yearlyMomaReward: 6215038,
+      multiplier: 3,
     },
   ],
   4: [
     {
+      icon: Artboard1,
       namePair: 'MOMA-ETH',
       addressLP: '0x1e9349147CF5063AD878dB1a7F4Fd65A36c315d5',
       moma: '0x834C5d20093BF538051aE3Aa04d6bC548110e54C',
@@ -47,15 +72,20 @@ const listTokensFarm = {
       contractVesting: '0x056e751862E1a7Ab3F765F5d7909a9215fB8f802',
       token0: 'ETH', // it can be an address or a symbol
       symbolEarn: 'MOMA',
+      decimalsMoma: 18,
       allowanceFarm: 0,
       pendingReward: 0,
       amountStake: 0,
       balanceLP: 0,
       claimableAmount: 0,
       amountLocking: 0,
+      vestingDuration: 0,
       apr: 0,
+      yearlyMomaReward: 6215038,
+      multiplier: 3,
     },
     {
+      icon: Artboard2,
       namePair: 'MOMA-ETH',
       addressLP: '0x1e9349147CF5063AD878dB1a7F4Fd65A36c315d5',
       moma: '0x834C5d20093BF538051aE3Aa04d6bC548110e54C',
@@ -63,15 +93,20 @@ const listTokensFarm = {
       contractVesting: '0xDff77aB3a9414f45588B5B3a1abC5cffFeC8CA17',
       token0: 'ETH', // it can be an address or a symbol
       symbolEarn: 'MOMA',
+      decimalsMoma: 18,
       allowanceFarm: 0,
       pendingReward: 0,
       amountStake: 0,
       balanceLP: 0,
       claimableAmount: 0,
       amountLocking: 0,
+      vestingDuration: 0,
       apr: 0,
+      yearlyMomaReward: 3456139,
+      multiplier: 2,
     },
     {
+      icon: Artboard3,
       namePair: 'MOMA-ETH',
       addressLP: '0x1e9349147CF5063AD878dB1a7F4Fd65A36c315d5',
       moma: '0x834C5d20093BF538051aE3Aa04d6bC548110e54C',
@@ -79,13 +114,40 @@ const listTokensFarm = {
       contractVesting: '0x0000000000000000000000000000000000000000',
       token0: 'ETH', // it can be an address or a symbol
       symbolEarn: 'MOMA',
+      decimalsMoma: 18,
       allowanceFarm: 0,
       pendingReward: 0,
       amountStake: 0,
       balanceLP: 0,
       claimableAmount: 0,
       amountLocking: 0,
+      vestingDuration: 0,
       apr: 0,
+      yearlyMomaReward: 1728069,
+      multiplier: 1,
+    },
+  ],
+  97: [
+    {
+      icon: Artboard1,
+      namePair: 'MOMA-BNB',
+      addressLP: '0x715Fb3e6e62f6D6865369F4CF9DcdbCbf06E909f',
+      moma: '0x0db74DdEc6e780BFdf92f34Ad4c66cEdBd045bea',
+      contractFarm: '0x9f3b947afeB3466E034E98053F3555C54e24d453',
+      contractVesting: '0xE4D5BB1A7cb41FfA1Ec81382118DB9ED8a64E8b5',
+      token0: 'BNB', // it can be an address or a symbol
+      symbolEarn: 'MOMA',
+      decimalsMoma: 18,
+      allowanceFarm: 0,
+      pendingReward: 0,
+      amountStake: 0,
+      balanceLP: 0,
+      claimableAmount: 0,
+      amountLocking: 0,
+      vestingDuration: 0,
+      apr: 0,
+      yearlyMomaReward: 6215038,
+      multiplier: 3,
     },
   ],
 };
@@ -106,13 +168,18 @@ const rootUrlsView = {
     viewContract: 'https://bscscan.com/address/',
     seePairInfo: 'https://pancakeswap.info/pair/',
   },
+  97: {
+    addLP: 'https://exchange.pancakeswap.finance/#/add/',
+    viewContract: 'https://bscscan.com/address/',
+    seePairInfo: 'https://pancakeswap.info/pair/',
+  },
 };
 
 export const getContractAddress = (_chainId) => {
   return contractAddress[_chainId];
 };
-export const getListTokensFarm = (_chainId) => {
-  return listTokensFarm[_chainId];
+export const getListTokensFarmDefault = (_chainId) => {
+  return listTokensFarmDefault[_chainId];
 };
 export const getRootUrlView = (_chainId) => {
   return rootUrlsView[_chainId];

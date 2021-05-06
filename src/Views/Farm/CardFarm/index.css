@@ -3,7 +3,7 @@
 }
 
 .staking-view .list-staking {
-  margin-top: 5rem;
+  margin: 3rem 0;
 }
 
 .staking-view .list-staking .item-staking {
@@ -14,7 +14,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  padding: 2rem;
+  padding: 2rem 1.5rem;
   position: relative;
   text-align: center;
   border: 1px solid rgb(0 0 0 / 8%);
@@ -149,6 +149,11 @@
   text-align: start;
   font-weight: bold;
 }
+
+.symbol-staked {
+  margin-top: 2.5rem;
+}
+
 .staking-view .list-staking .item-staking .content-item .btn-stake {
   margin-top: 0.5rem;
   margin-bottom: 1.5rem;
@@ -229,14 +234,11 @@
   border-radius: 1rem;
   background: #fafafa;
   padding: 0.5rem;
-  margin: 1rem 0;
-}
-
-.staking-view .list-staking .item-staking .content-item .show-vesting {
-  margin: 0.5rem 0;
 }
 .staking-view .list-staking .item-staking .content-item .show-vesting .title-vesting {
   font-weight: bold;
+  text-align: start;
+  margin-bottom: 0.75rem;
 }
 
 .staking-view .list-staking .item-staking .content-item .title-amount-claimable {
@@ -247,4 +249,19 @@
 
 .multier-pool .moma-per-block {
   font-size: 0.9rem;
+}
+
+.token-vesting {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  align-content: stretch;
+}
+
+@media (max-width: 768px) {
+  .staking-view {
+    padding-bottom: 2.5rem;
+  }
 }

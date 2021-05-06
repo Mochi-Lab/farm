@@ -103,6 +103,8 @@ html[data-theme='dark'] {
 }
 [data-theme='dark'] .ant-input-number {
   background-color: rgb(234 234 234 / 15%) !important;
+  color: white;
+  border: none;
 }
 [data-theme='dark'] .ant-picker {
   background-color: rgb(234 234 234 / 15%) !important;

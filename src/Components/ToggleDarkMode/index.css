@@ -29,8 +29,8 @@ div {
 
 .toggle input:checked ~ span:after {
   content: '★';
-  top: -0.8rem;
-  left: 1.3rem;
+  top: 0.15rem;
+  left: 1.35rem;
   width: 0.5rem;
   height: 0.5rem;
   font-size: 0.7rem;
@@ -64,7 +64,7 @@ div {
 .toggle span:after {
   content: '☁';
   position: absolute;
-  top: -0.5rem;
+  top: 0.25rem;
   left: 0.55rem;
   width: 0.5rem;
   height: 0.5rem;

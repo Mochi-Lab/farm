@@ -2,8 +2,11 @@ import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Row } from 'antd';
 import CardFarm from './CardFarm';
-// import CountDownTime from 'Components/CountDownTime';
-import { getListTokensFarm, getRootUrlView, getContractAddress } from 'utils/getContractAddress';
+import {
+  getListTokensFarmDefault,
+  getRootUrlView,
+  getContractAddress,
+} from 'utils/getContractAddress';
 import useInterval from 'utils/useInterval';
 import {
   checkAllowanceFarm,
@@ -21,22 +24,9 @@ import './index.css';
 export default function Farm() {
   const { walletAddress, chainId, listTokensFarm, contractAddress } = useSelector((state) => state);
   const [rootUrlsView, setRootUrlsView] = useState(getRootUrlView(chainId));
-
-  useEffect(() => {
-    const fetchListFarmDefault = async () => {
-      await store.dispatch(setListTokensFarm(getListTokensFarm(chainId)));
-      await store.dispatch(setContractAddress(getContractAddress(chainId)));
-      setRootUrlsView(getRootUrlView(chainId));
-    };
-
-    if (!!chainId) {
-      fetchListFarmDefault();
-    }
-  }, [chainId]);
-
   const fetchAllFarm = async () => {
-    if (!!walletAddress && !!listTokensFarm) {
-      var listToken = listTokensFarm;
+    if (!!walletAddress && !!chainId) {
+      var listToken = !!getListTokensFarmDefault(chainId) ? getListTokensFarmDefault(chainId) : [];
       listToken.forEach(async (pool, i) => {
         listToken[i].pendingReward = await store.dispatch(fetchPendingReward(pool.contractFarm));
         listToken[i].allowanceFarm = await store.dispatch(
@@ -56,11 +46,42 @@ export default function Farm() {
   };
 
   useEffect(() => {
-    if (!!walletAddress && !!chainId) {
-      fetchAllFarm();
+    const fetchListFarmDefault = async () => {
+      if (!walletAddress) {
+        await store.dispatch(setListTokensFarm(getListTokensFarmDefault(chainId)));
+      } else {
+        var listToken = !!getListTokensFarmDefault(chainId)
+          ? getListTokensFarmDefault(chainId)
+          : [];
+        listToken.forEach(async (pool, i) => {
+          listToken[i].pendingReward = await store.dispatch(fetchPendingReward(pool.contractFarm));
+          listToken[i].allowanceFarm = await store.dispatch(
+            checkAllowanceFarm(pool.addressLP, pool.contractFarm)
+          );
+          listToken[i].amountStake = await store.dispatch(fetchAmountStake(pool.contractFarm));
+          listToken[i].balanceLP = await store.dispatch(fetchBalanceLP(pool.addressLP));
+          listToken[i].claimableAmount = await store.dispatch(
+            fetchVestingTotalClaimableAmount(pool.contractVesting)
+          );
+          listToken[i].amountLocking = await store.dispatch(
+            fetchTotalAmountLockedByUser(pool.contractVesting)
+          );
+        });
+        await store.dispatch(setListTokensFarm(listToken));
+      }
+      await store.dispatch(setContractAddress(getContractAddress(chainId)));
+      setRootUrlsView(getRootUrlView(chainId));
+    };
+
+    if (!!chainId) {
+      fetchListFarmDefault();
     }
+  }, [chainId, walletAddress, listTokensFarm]);
+
+  useEffect(() => {
+    fetchAllFarm();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [walletAddress, chainId, listTokensFarm]);
+  }, [listTokensFarm]);
 
   useInterval(() => {
     fetchAllFarm();
@@ -69,9 +90,8 @@ export default function Farm() {
   return (
     <div className='staking-view background-mode'>
       <div className='container'>
-        {/* <CountDownTime className='countdown-stake' /> */}
         <div className='list-staking'>
-          <Row justify='center'>
+          <Row justify='center' gutter={[30, 30]}>
             {!!listTokensFarm
               ? listTokensFarm.map((token, index) => (
                   <CardFarm

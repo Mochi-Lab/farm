@@ -1,19 +1,19 @@
 import { connectWeb3Modal } from 'Connections/web3Modal';
 import { useEffect, useState } from 'react';
 import { Col, Button } from 'antd';
-import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
 import {
   approveFarm,
   depositFarm,
   claimTotalVesting,
   fecthAprPool,
-  fecthRewardPerBlock,
+  fecthMultiplier,
   fecthTotalTokenLP,
   fecthPriceTokenWithUSDT,
+  fecthVestingDuration,
 } from 'store/actions';
 
 import { parseBalance } from 'utils/helper';
-import ModalFarm from 'Views/Farm/ModalFarm';
+import ActionsFarm from 'Views/Farm/ActionsFarm';
 import store from 'store/index';
 import logoMochi from 'Assets/logo-mochi.png';
 import './index.css';
@@ -30,9 +30,9 @@ export default function CardFarm({
   const [loadingHarvest, setLoadingHarvest] = useState(false);
   const [loadingClaim, setLoadingClaim] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
-  const [showModalFarm, setShowModalFarm] = useState({ status: false, type: '', symbol: '' });
   const [aprPool, setAprPool] = useState(0);
-  const [rewardPerBlock, setRewardPerBlock] = useState(0);
+  const [multiplier, setMultiplier] = useState(0);
+  const [vestingDuration, setVestingDuration] = useState(0);
   const [valueTotalLiquidity, setValueTotalLiquidity] = useState(0);
 
   useEffect(() => {
@@ -59,22 +59,27 @@ export default function CardFarm({
     };
 
     const fetchDataPool = async () => {
-      setAprPool(await store.dispatch(fecthAprPool(token.addressLP, token.contractFarm)));
-      setRewardPerBlock(await store.dispatch(fecthRewardPerBlock(token.contractFarm)));
+      setAprPool(
+        await store.dispatch(
+          fecthAprPool(token.addressLP, token.contractFarm, token.moma, token.yearlyMomaReward)
+        )
+      );
+      setMultiplier(await store.dispatch(fecthMultiplier(token.contractFarm)));
+      setVestingDuration(await store.dispatch(fecthVestingDuration(token.contractVesting)));
     };
     fetchDataPool();
     calculateTotalLock();
   });
 
   async function approveTokenFarm(addressFarm, index) {
-    setloadingApprove(true);
     if (!walletAddress) {
       await connectWeb3Modal();
     } else {
+      setloadingApprove(true);
       await store.dispatch(approveFarm(addressFarm, token.contractFarm));
       await fetchAllFarm();
+      setloadingApprove(false);
     }
-    setloadingApprove(false);
   }
 
   async function harvestTokenFarm() {
@@ -92,18 +97,19 @@ export default function CardFarm({
   }
 
   return (
-    <Col xs={{ span: 24 }} md={{ span: 12 }} xl={{ span: 6 }}>
+    <Col xs={{ span: 24 }} md={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }}>
       <div className='item-staking'>
         <div className='header-item'>
           <div className='logo-token'>
-            <img src={logoMochi} alt='logo-token' />
+            <img src={!!token.icon ? token.icon : logoMochi} alt='logo-token' />
           </div>
           <div className='info-pool textmode'>
-            <h2 className='textmode'>{token.namePair}</h2>
+            <h2 className='textmode'>{token.namePair}</h2>(
+            {vestingDuration > 0 ? `${vestingDuration} months vesting pool` : 'no vesting pool'})
             <div className='box-multi'>
               <div className='multier-pool'>
                 <h3>
-                  {parseBalance(rewardPerBlock, 12) * 3}{' '}
+                  {parseBalance(multiplier, 12) * token.multiplier}{' '}
                   <span className='moma-per-block'>{token.symbolEarn}/Block</span>
                 </h3>
               </div>
@@ -154,74 +160,44 @@ export default function CardFarm({
               </Button>
             </div>
           </div>
-          <div className='wrap-show-vesting'>
-            <div className='show-vesting textmode'>
-              <div className='title-vesting'>Vesting Duration: </div>
-              <div className='token-vesting'>
-                <h3 className='textmode'>6 month</h3>
+          {vestingDuration > 0 || token.amountLocking > 0 ? (
+            <div className='wrap-show-vesting'>
+              <div className='show-vesting textmode'>
+                <div className='title-vesting'>Reward Vesting: </div>
+                <div className='token-vesting'>
+                  <h3 className='textmode'>{vestingDuration} month</h3>
+                </div>
+              </div>
+              <div className='show-vesting textmode'>
+                <div className='title-vesting'>Locked reward: </div>
+                <div className='token-vesting'>
+                  <h3 className='textmode'>{parseBalance(token.amountLocking, 18)}</h3>
+                </div>
+              </div>
+              <div className='title-amount-claimable textmode'>Claimable reward</div>
+              <div className='wrap-amount-stake textmode'>
+                <div className='token-earn'>
+                  <h3 className='textmode'>{parseBalance(token.claimableAmount, 18)}</h3>
+                </div>
+                <div className='harvest'>
+                  <Button
+                    disabled={parseBalance(token.claimableAmount, 18) < 0.001}
+                    onClick={() => claimVesting()}
+                    loading={loadingClaim}
+                  >
+                    Claim
+                  </Button>
+                </div>
               </div>
             </div>
-            <div className='show-vesting textmode'>
-              <div className='title-vesting'>{token.symbolEarn} locking: </div>
-              <div className='token-vesting'>
-                <h3 className='textmode'>{parseBalance(token.amountLocking, 18)}</h3>
-              </div>
-            </div>
-            <div className='title-amount-claimable textmode'>Claimable Amount</div>
-            <div className='wrap-amount-stake textmode'>
-              <div className='token-earn'>
-                <h3 className='textmode'>{parseBalance(token.claimableAmount, 18)}</h3>
-              </div>
-              <div className='harvest'>
-                <Button
-                  disabled={token.claimableAmount <= 0}
-                  onClick={() => claimVesting()}
-                  loading={loadingClaim}
-                >
-                  Claim
-                </Button>
-              </div>
-            </div>
-          </div>
+          ) : null}
+
           <div className='symbol-staked textmode'>
             {token.namePair} LP <span className='blur-text textmode'>STAKED</span>
           </div>
           {!!walletAddress && token.allowanceFarm > 0 ? (
             <div className='wrap-amount-stake textmode'>
-              <div className='token-earn'>
-                <h3 className='textmode'>{parseBalance(token.amountStake, 18)}</h3>
-              </div>
-              <div className='stake'>
-                {token.amountStake > 0 ? (
-                  <div className='stake-unstake'>
-                    <Button
-                      icon={<MinusOutlined />}
-                      size='large'
-                      onClick={() => {
-                        setShowModalFarm({ status: true, type: 'unstake', symbol: token.namePair });
-                      }}
-                    />
-                    <Button
-                      icon={<PlusOutlined />}
-                      size='large'
-                      onClick={() => {
-                        setShowModalFarm({ status: true, type: 'stake', symbol: token.namePair });
-                      }}
-                    />
-                  </div>
-                ) : (
-                  <Button
-                    type='primary'
-                    className='btn-stake'
-                    size='large'
-                    onClick={() => {
-                      setShowModalFarm({ status: true, type: 'stake', symbol: token.namePair });
-                    }}
-                  >
-                    Stake LP
-                  </Button>
-                )}
-              </div>
+              <ActionsFarm token={token} fetchAllFarm={fetchAllFarm} />
             </div>
           ) : (
             <Button
@@ -331,12 +307,6 @@ export default function CardFarm({
           ) : null}
         </div>
       </div>
-      <ModalFarm
-        showModalFarm={showModalFarm}
-        setShowModalFarm={setShowModalFarm}
-        token={token}
-        fetchAllFarm={fetchAllFarm}
-      />
     </Col>
   );
 }
