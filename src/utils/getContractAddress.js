@@ -154,14 +154,14 @@ const listTokensFarmDefault = {
 
 const rootUrlsView = {
   1: {
-    addLP: 'https://app.uniswap.org/#/add/',
+    addLP: 'https://app.uniswap.org/#/add/v2/',
     viewContract: 'https://etherscan.io/address/',
-    seePairInfo: 'https://info.uniswap.org/pair/',
+    seePairInfo: 'https://v2.info.uniswap.org/pair/',
   },
   4: {
-    addLP: 'https://app.uniswap.org/#/add/',
+    addLP: 'https://app.uniswap.org/#/add/v2/',
     viewContract: 'https://rinkeby.etherscan.io/address/',
-    seePairInfo: 'https://info.uniswap.org/pair/',
+    seePairInfo: 'https://v2.info.uniswap.org/pair/',
   },
   56: {
     addLP: 'https://exchange.pancakeswap.finance/#/add/',
