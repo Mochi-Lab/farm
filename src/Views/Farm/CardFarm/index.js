@@ -165,7 +165,7 @@ export default function CardFarm({
               <div className='show-vesting textmode'>
                 <div className='title-vesting'>Reward Vesting: </div>
                 <div className='token-vesting'>
-                  <h3 className='textmode'>{vestingDuration} month</h3>
+                  <h3 className='textmode'>{vestingDuration} months</h3>
                 </div>
               </div>
               <div className='show-vesting textmode'>
