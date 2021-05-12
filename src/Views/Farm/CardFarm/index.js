@@ -65,7 +65,11 @@ export default function CardFarm({
         )
       );
       setMultiplier(await store.dispatch(fecthMultiplier(token.contractFarm)));
-      setVestingDuration(await store.dispatch(fecthVestingDuration(token.contractVesting)));
+      setVestingDuration(
+        await store.dispatch(
+          fecthVestingDuration(token.contractVesting, rootUrlsView.blocksPerMonth)
+        )
+      );
     };
     fetchDataPool();
     calculateTotalLock();

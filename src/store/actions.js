@@ -359,13 +359,16 @@ export const fecthPriceTokenWithUSDT = (
   }
 };
 
-export const fecthVestingDuration = (contractVesting) => async (dispatch, getState) => {
+export const fecthVestingDuration = (contractVesting, blocksPerMonth) => async (
+  dispatch,
+  getState
+) => {
   const { web3 } = getState();
   if (contractVesting !== '0x0000000000000000000000000000000000000000') {
     try {
       const vestingInstance = new web3.eth.Contract(Vesting.abi, contractVesting);
       let vestingDuration = await vestingInstance.methods.vestingDuration().call();
-      return vestingDuration / 195000;
+      return vestingDuration / blocksPerMonth;
     } catch (error) {
       console.log(error);
       // message.error('Fetch Vesting Claimable Error!');
