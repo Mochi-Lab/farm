@@ -157,21 +157,25 @@ const rootUrlsView = {
     addLP: 'https://app.uniswap.org/#/add/v2/',
     viewContract: 'https://etherscan.io/address/',
     seePairInfo: 'https://v2.info.uniswap.org/pair/',
+    blocksPerMonth: 195000,
   },
   4: {
     addLP: 'https://app.uniswap.org/#/add/v2/',
     viewContract: 'https://rinkeby.etherscan.io/address/',
     seePairInfo: 'https://v2.info.uniswap.org/pair/',
+    blocksPerMonth: 195000,
   },
   56: {
     addLP: 'https://exchange.pancakeswap.finance/#/add/',
     viewContract: 'https://bscscan.com/address/',
     seePairInfo: 'https://pancakeswap.info/pair/',
+    blocksPerMonth: 864000,
   },
   97: {
     addLP: 'https://exchange.pancakeswap.finance/#/add/',
     viewContract: 'https://bscscan.com/address/',
     seePairInfo: 'https://pancakeswap.info/pair/',
+    blocksPerMonth: 195000,
   },
 };
 
