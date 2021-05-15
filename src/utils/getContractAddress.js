@@ -5,16 +5,17 @@ import Artboard3 from 'Assets/icons/Artboard3.png';
 const contractAddress = {
   //BSC Mainnet
   56: {
-    USDT: { address: '0x55d398326f99059fF775485246999027B3197955', symbol: 'USDT', decimals: '18' },
+    USDT: { address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', symbol: 'BUSD', decimals: '18' },
     NATIVE: {
       address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
       symbol: 'WBNB',
       decimals: '18',
     }, // WBNB
+    PairUsdtNative: '0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16', // pair USDT-WBNB
   },
   //BSC Testnet
   97: {
-    USDT: { address: '0x82a75255DCFDA994FE89A1023F7CD1c6C7D19740', symbol: 'USDT', decimals: '18' },
+    USDT: { address: '0x82a75255DCFDA994FE89A1023F7CD1c6C7D19740', symbol: 'BUSD', decimals: '18' },
     NATIVE: {
       address: '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
       symbol: 'WBNB',
