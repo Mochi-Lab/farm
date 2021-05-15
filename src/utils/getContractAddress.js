@@ -167,7 +167,7 @@ const listTokensFarmDefault = {
       amountLocking: 0,
       vestingDuration: 0,
       apr: 0,
-      yearlyMomaReward: 6215038,
+      yearlyMomaReward: 3212697,
       multiplier: 0.2,
     },
     {
@@ -188,7 +188,7 @@ const listTokensFarmDefault = {
       amountLocking: 0,
       vestingDuration: 0,
       apr: 0,
-      yearlyMomaReward: 6215038,
+      yearlyMomaReward: 3212697,
       multiplier: 0.1,
     },
   ],
