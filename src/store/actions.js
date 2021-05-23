@@ -1,6 +1,7 @@
 import { parseBalance } from 'utils/helper';
 import ERC20 from 'Contracts/ERC20.json';
 import Farm from 'Contracts/farm/Farm.json';
+import MomaFarm from 'Contracts/farm/MomaFarm.json';
 import Vesting from 'Contracts/farm/Vesting.json';
 import Pair from 'Contracts/UniswapV2Pair.json';
 import { message } from 'antd';
@@ -26,6 +27,10 @@ export const setChainId = (chainId) => (dispatch) => {
 export const SET_LIST_TOKENS_FARM = 'SET_LIST_TOKENS_FARM';
 export const setListTokensFarm = (listTokensFarm) => (dispatch) => {
   dispatch({ type: SET_LIST_TOKENS_FARM, listTokensFarm });
+};
+export const SET_LIST_TOKENS_POOL = 'SET_LIST_TOKENS_POOL';
+export const setListTokensPool = (listTokensPool) => (dispatch) => {
+  dispatch({ type: SET_LIST_TOKENS_POOL, listTokensPool });
 };
 
 export const SET_CONTRACT_ADDRESS = 'SET_CONTRACT_ADDRESS';
@@ -71,7 +76,7 @@ export const setBalance = () => async (dispatch, getState) => {
   });
 };
 
-export const approveFarm = (addressToken, contractFarm) => async (dispatch, getState) => {
+export const approveAll = (addressToken, contractFarm) => async (dispatch, getState) => {
   const { web3, walletAddress } = getState();
 
   try {
@@ -103,77 +108,6 @@ export const checkAllowanceFarm = (addressToken, contractFarm) => async (dispatc
   } catch (error) {
     console.log(error);
     // message.error('Fetch Allowance Error');
-  }
-};
-
-export const depositFarm = (amountWei, contractFarm) => async (dispatch, getState) => {
-  const { web3, walletAddress } = getState();
-  try {
-    const instaneFarm = new web3.eth.Contract(Farm.abi, contractFarm);
-    await instaneFarm.methods
-      .deposit(amountWei)
-      .send({ from: walletAddress })
-      .on('receipt', (receipt) => {
-        if (amountWei === 0) {
-          message.success('Harvest Successfully !');
-        } else {
-          message.success('Deposit Successfully !');
-        }
-        return true;
-      })
-      .on('error', (error, receipt) => {
-        console.log(error);
-        // message.error('Deposit Error !');
-        return false;
-      });
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
-};
-
-export const withdrawFarm = (amountWei, contractFarm) => async (dispatch, getState) => {
-  const { web3, walletAddress } = getState();
-  try {
-    const instaneFarm = new web3.eth.Contract(Farm.abi, contractFarm);
-    await instaneFarm.methods
-      .withdraw(amountWei)
-      .send({ from: walletAddress })
-      .on('receipt', (receipt) => {
-        message.success('Withdraw Successfully !');
-        return true;
-      })
-      .on('error', (error, receipt) => {
-        console.log(error);
-        // message.error('Withdraw Error !');
-        return false;
-      });
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
-};
-
-export const fetchPendingReward = (contractFarm) => async (dispatch, getState) => {
-  const { web3, walletAddress } = getState();
-  try {
-    const instaneFarm = new web3.eth.Contract(Farm.abi, contractFarm);
-    let pendingReward = await instaneFarm.methods.pendingReward(walletAddress).call();
-    return pendingReward;
-  } catch (error) {
-    console.log(error);
-    // message.error('Fetch Pending Reward Error !');
-  }
-};
-export const fetchAmountStake = (contractFarm) => async (dispatch, getState) => {
-  const { web3, walletAddress } = getState();
-  try {
-    const instaneFarm = new web3.eth.Contract(Farm.abi, contractFarm);
-    let amountStake = await instaneFarm.methods.userInfo(walletAddress).call();
-    return amountStake.amount;
-  } catch (error) {
-    console.log(error);
-    // message.error('Fetch Amount Stake Error!');
   }
 };
 
@@ -275,22 +209,6 @@ export const fecthAprPool = (addressLP, contractFarm, moma, yearlyMomaReward) =>
   // return apr.isNaN() || !apr.isFinite() ? null : apr.toNumber();
 };
 
-export const fecthMultiplier = (contractFarm) => async (dispatch, getState) => {
-  const { web3 } = getState();
-  try {
-    const instaneFarm = new web3.eth.Contract(Farm.abi, contractFarm);
-    const blockCurrent = await web3.eth.getBlockNumber();
-    const rewardPerBlock = await instaneFarm.methods
-      .getMultiplier(blockCurrent, blockCurrent + 1)
-      .call();
-    return rewardPerBlock;
-  } catch (error) {
-    console.log(error);
-    // message.error('Fecth Reward Per Block Error !');
-    return false;
-  }
-};
-
 export const fecthTotalTokenLP = (addressTokenLP, addressContractFarm, moma) => async (
   dispatch,
   getState
@@ -375,4 +293,214 @@ export const fecthVestingDuration = (contractVesting, blocksPerMonth) => async (
     }
   }
   return 0;
+};
+
+// Functions use contract Farm
+export const depositFarm = (amountWei, contractFarm) => async (dispatch, getState) => {
+  const { web3, walletAddress } = getState();
+  try {
+    const instaneFarm = new web3.eth.Contract(Farm.abi, contractFarm);
+    await instaneFarm.methods
+      .deposit(amountWei)
+      .send({ from: walletAddress })
+      .on('receipt', (receipt) => {
+        if (amountWei === 0) {
+          message.success('Harvest Successfully !');
+        } else {
+          message.success('Deposit Successfully !');
+        }
+        return true;
+      })
+      .on('error', (error, receipt) => {
+        console.log(error);
+        // message.error('Deposit Error !');
+        return false;
+      });
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+
+export const withdrawFarm = (amountWei, contractFarm) => async (dispatch, getState) => {
+  const { web3, walletAddress } = getState();
+  try {
+    const instaneFarm = new web3.eth.Contract(Farm.abi, contractFarm);
+    await instaneFarm.methods
+      .withdraw(amountWei)
+      .send({ from: walletAddress })
+      .on('receipt', (receipt) => {
+        message.success('Withdraw Successfully !');
+        return true;
+      })
+      .on('error', (error, receipt) => {
+        console.log(error);
+        // message.error('Withdraw Error !');
+        return false;
+      });
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+
+export const fetchPendingRewardFarm = (contractFarm) => async (dispatch, getState) => {
+  const { web3, walletAddress } = getState();
+  try {
+    const instaneFarm = new web3.eth.Contract(Farm.abi, contractFarm);
+    let pendingReward = await instaneFarm.methods.pendingReward(walletAddress).call();
+    return pendingReward;
+  } catch (error) {
+    console.log(error);
+    // message.error('Fetch Pending Reward Error !');
+  }
+};
+export const fetchAmountStakeFarm = (contractFarm) => async (dispatch, getState) => {
+  const { web3, walletAddress } = getState();
+  try {
+    const instaneFarm = new web3.eth.Contract(Farm.abi, contractFarm);
+    let amountStake = await instaneFarm.methods.userInfo(walletAddress).call();
+    return amountStake.amount;
+  } catch (error) {
+    console.log(error);
+    // message.error('Fetch Amount Stake Error!');
+  }
+};
+
+export const fecthMultiplierFarm = (contractFarm) => async (dispatch, getState) => {
+  const { web3 } = getState();
+  try {
+    const instaneFarm = new web3.eth.Contract(Farm.abi, contractFarm);
+    const blockCurrent = await web3.eth.getBlockNumber();
+    const rewardPerBlock = await instaneFarm.methods
+      .getMultiplier(blockCurrent, blockCurrent + 1)
+      .call();
+    return rewardPerBlock;
+  } catch (error) {
+    console.log(error);
+    // message.error('Fecth Reward Per Block Error !');
+    return false;
+  }
+};
+
+// Functions use contract MomaFarm
+export const depositPool = (amountWei, contractPool) => async (dispatch, getState) => {
+  const { web3, walletAddress } = getState();
+  try {
+    const instanePool = new web3.eth.Contract(MomaFarm.abi, contractPool);
+    await instanePool.methods
+      .deposit(amountWei)
+      .send({ from: walletAddress })
+      .on('receipt', (receipt) => {
+        if (amountWei === 0) {
+          message.success('Harvest Successfully !');
+        } else {
+          message.success('Deposit Successfully !');
+        }
+        return true;
+      })
+      .on('error', (error, receipt) => {
+        console.log(error);
+        // message.error('Deposit Error !');
+        return false;
+      });
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+
+export const withdrawPool = (amountWei, contractPool) => async (dispatch, getState) => {
+  const { web3, walletAddress } = getState();
+  try {
+    const instaneFarm = new web3.eth.Contract(MomaFarm.abi, contractPool);
+    await instaneFarm.methods
+      .withdraw(amountWei)
+      .send({ from: walletAddress })
+      .on('receipt', (receipt) => {
+        message.success('Withdraw Successfully !');
+        return true;
+      })
+      .on('error', (error, receipt) => {
+        console.log(error);
+        // message.error('Withdraw Error !');
+        return false;
+      });
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+
+export const fetchPendingRewardPool = (contractPool) => async (dispatch, getState) => {
+  const { web3, walletAddress } = getState();
+  try {
+    const instaneFarm = new web3.eth.Contract(MomaFarm.abi, contractPool);
+    let pendingMoma = await instaneFarm.methods.pendingMoma(walletAddress).call();
+    return pendingMoma;
+  } catch (error) {
+    console.log(error);
+    // message.error('Fetch Pending Reward Error !');
+  }
+};
+
+export const fetchAmountStakePool = (contractPool) => async (dispatch, getState) => {
+  const { web3, walletAddress } = getState();
+  try {
+    const instaneFarm = new web3.eth.Contract(MomaFarm.abi, contractPool);
+    let amountStakedPool = await instaneFarm.methods.userInfo(walletAddress).call();
+    return amountStakedPool.amount;
+  } catch (error) {
+    console.log(error);
+    // message.error('Fetch Amount Stake Error!');
+  }
+};
+
+export const fecthMultiplierPool = (contractPool) => async (dispatch, getState) => {
+  const { web3 } = getState();
+  try {
+    const instaneFarm = new web3.eth.Contract(MomaFarm.abi, contractPool);
+    const blockCurrent = await web3.eth.getBlockNumber();
+    const rewardPerBlock = await instaneFarm.methods
+      .getMultiplier(blockCurrent, blockCurrent + 1)
+      .call();
+    return rewardPerBlock;
+  } catch (error) {
+    console.log(error);
+    // message.error('Fecth Reward Per Block Error !');
+    return false;
+  }
+};
+
+export const fecthTotalTokenPool = (addressTokenLP, contractPool) => async (dispatch, getState) => {
+  const { web3 } = getState();
+  try {
+    const instaneLP = new web3.eth.Contract(ERC20.abi, addressTokenLP);
+    let balanceLPOfPool = await instaneLP.methods.balanceOf(contractPool).call();
+    return balanceLPOfPool;
+  } catch (error) {
+    console.log(error);
+    // message.error('Fecth Total Token LP Error !');
+  }
+};
+
+export const fecthApyPool = (addressLP, contractPool, yearlyMomaReward) => async (
+  dispatch,
+  getState
+) => {
+  const { web3 } = getState();
+  try {
+    const tokenLP = new web3.eth.Contract(ERC20.abi, addressLP);
+    const totalLpTokenInPool = await tokenLP.methods.balanceOf(contractPool).call();
+    const yearlyMomaRewardAllocation = yearlyMomaReward * 10 ** 18;
+    let apr = (yearlyMomaRewardAllocation / totalLpTokenInPool) * 100;
+    let dailyAPR = apr / 365 / 100;
+    let apy = (1 + dailyAPR) ** 365;
+    apy = roundToTwoDp(apy * 100);
+    return apy;
+  } catch (error) {
+    console.log(error);
+    // message.error('Fecth Apy Error !');
+    return false;
+  }
 };

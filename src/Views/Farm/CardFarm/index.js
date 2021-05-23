@@ -1,12 +1,14 @@
 import { connectWeb3Modal } from 'Connections/web3Modal';
 import { useEffect, useState } from 'react';
-import { Col, Button } from 'antd';
+import { Col, Button /* , Tooltip */ } from 'antd';
+// import { SyncOutlined, ReloadOutlined } from '@ant-design/icons';
+
 import {
-  approveFarm,
+  approveAll,
   depositFarm,
   claimTotalVesting,
   fecthAprPool,
-  fecthMultiplier,
+  fecthMultiplierFarm,
   fecthTotalTokenLP,
   fecthPriceTokenWithUSDT,
   fecthVestingDuration,
@@ -23,6 +25,7 @@ export default function CardFarm({
   index,
   walletAddress,
   fetchAllFarm,
+  fetchAllPool,
   rootUrlsView,
   contractAddress,
 }) {
@@ -30,6 +33,7 @@ export default function CardFarm({
   const [loadingHarvest, setLoadingHarvest] = useState(false);
   const [loadingClaim, setLoadingClaim] = useState(false);
   const [showDetail, setShowDetail] = useState(false);
+  const [showDetailVesting, setShowDetailVesting] = useState(false);
   const [aprPool, setAprPool] = useState(0);
   const [multiplier, setMultiplier] = useState(0);
   const [vestingDuration, setVestingDuration] = useState(0);
@@ -64,7 +68,7 @@ export default function CardFarm({
           fecthAprPool(token.addressLP, token.contractFarm, token.moma, token.yearlyMomaReward)
         )
       );
-      setMultiplier(await store.dispatch(fecthMultiplier(token.contractFarm)));
+      setMultiplier(await store.dispatch(fecthMultiplierFarm(token.contractFarm)));
       setVestingDuration(
         await store.dispatch(
           fecthVestingDuration(token.contractVesting, rootUrlsView.blocksPerMonth)
@@ -80,8 +84,9 @@ export default function CardFarm({
       await connectWeb3Modal();
     } else {
       setloadingApprove(true);
-      await store.dispatch(approveFarm(addressFarm, token.contractFarm));
+      await store.dispatch(approveAll(addressFarm, token.contractFarm));
       await fetchAllFarm();
+      await fetchAllPool();
       setloadingApprove(false);
     }
   }
@@ -89,14 +94,16 @@ export default function CardFarm({
   async function harvestTokenFarm() {
     setLoadingHarvest(true);
     await store.dispatch(depositFarm(0, token.contractFarm));
-    fetchAllFarm();
+    await fetchAllFarm();
+    await fetchAllPool();
     setLoadingHarvest(false);
   }
 
   async function claimVesting() {
     setLoadingClaim(true);
     await store.dispatch(claimTotalVesting(token.contractVesting));
-    fetchAllFarm();
+    await fetchAllFarm();
+    await fetchAllPool();
     setLoadingClaim(false);
   }
 
@@ -122,7 +129,7 @@ export default function CardFarm({
         </div>
         <div className='content-item'>
           <div className='show-apr textmode'>
-            <div className='title-apr'>APR: </div>
+            <div className='title-apr'>APR</div>
             <div className='apr'>
               <svg
                 viewBox='0 0 24 24'
@@ -147,57 +154,100 @@ export default function CardFarm({
               <h3 className='textmode'>{token.symbolEarn}</h3>
             </div>
           </div>
-          <div className='title-amount-stake textmode'>
-            {token.symbolEarn} <span className='blur-text textmode'>EARNED</span>
-          </div>
-          <div className='wrap-amount-stake textmode'>
+          <div className='wrap-amount-stake wrap-earn textmode'>
+            <div className='title-amount-stake textmode'>
+              {token.symbolEarn} <span className='blur-text textmode'>EARNED</span>
+            </div>
             <div className='token-earn'>
               <h3 className='textmode'>{parseBalance(token.pendingReward, 18)}</h3>
             </div>
-            <div className='harvest'>
-              <Button
-                disabled={token.pendingReward <= 0}
-                loading={loadingHarvest}
-                onClick={() => harvestTokenFarm()}
+          </div>
+
+          <div className='wrap-detail-and-harvest textmode'>
+            {vestingDuration > 0 || token.amountLocking > 0 ? (
+              <div
+                className='btn-show-detail'
+                onClick={() => setShowDetailVesting(!showDetailVesting)}
               >
-                Harvest
-              </Button>
+                {showDetailVesting ? (
+                  <>
+                    {' '}
+                    Hide{''}
+                    <svg
+                      viewBox='0 0 24 24'
+                      color='text'
+                      width='20px'
+                      xmlns='http://www.w3.org/2000/svg'
+                      className='sc-bdvvaa eomlrw'
+                    >
+                      <path d='M8.11997 14.7101L12 10.8301L15.88 14.7101C16.27 15.1001 16.9 15.1001 17.29 14.7101C17.68 14.3201 17.68 13.6901 17.29 13.3001L12.7 8.7101C12.31 8.3201 11.68 8.3201 11.29 8.7101L6.69997 13.3001C6.30997 13.6901 6.30997 14.3201 6.69997 14.7101C7.08997 15.0901 7.72997 15.1001 8.11997 14.7101Z'></path>
+                    </svg>
+                  </>
+                ) : (
+                  <>
+                    {' '}
+                    Details Vesting{''}
+                    <svg
+                      viewBox='0 0 24 24'
+                      color='text'
+                      width='20px'
+                      xmlns='http://www.w3.org/2000/svg'
+                      className='sc-bdvvaa eomlrw'
+                    >
+                      <path d='M8.11997 9.29006L12 13.1701L15.88 9.29006C16.27 8.90006 16.9 8.90006 17.29 9.29006C17.68 9.68006 17.68 10.3101 17.29 10.7001L12.7 15.2901C12.31 15.6801 11.68 15.6801 11.29 15.2901L6.69997 10.7001C6.30997 10.3101 6.30997 9.68006 6.69997 9.29006C7.08997 8.91006 7.72997 8.90006 8.11997 9.29006Z'></path>
+                    </svg>
+                  </>
+                )}
+              </div>
+            ) : null}
+
+            <div className='btn-harvet textmode'>
+              <div className='harvest'>
+                <Button
+                  disabled={token.pendingReward <= 0}
+                  loading={loadingHarvest}
+                  onClick={() => harvestTokenFarm()}
+                >
+                  Harvest
+                </Button>
+              </div>
             </div>
           </div>
-          {vestingDuration > 0 || token.amountLocking > 0 ? (
+          {(vestingDuration > 0 || token.amountLocking > 0) && !!showDetailVesting ? (
             <div className='wrap-show-vesting'>
-              <div className='show-vesting textmode'>
-                <div className='title-vesting'>Reward Vesting: </div>
-                <div className='token-vesting'>
-                  <h3 className='textmode'>{vestingDuration} months</h3>
-                </div>
-              </div>
               <div className='show-vesting textmode'>
                 <div className='title-vesting'>Locked reward: </div>
                 <div className='token-vesting'>
                   <h3 className='textmode'>{parseBalance(token.amountLocking, 18)}</h3>
                 </div>
               </div>
-              <div className='title-amount-claimable textmode'>Claimable reward</div>
+              <div className='show-vesting textmode'>
+                <div className='title-vesting'>Reward Vesting: </div>
+                <div className='token-vesting'>
+                  <h3 className='textmode'>{vestingDuration} months</h3>
+                </div>
+              </div>
+
               <div className='wrap-amount-stake textmode'>
+                <div className='title-amount-claimable textmode'>Claimable reward</div>
                 <div className='token-earn'>
                   <h3 className='textmode'>{parseBalance(token.claimableAmount, 18)}</h3>
                 </div>
-                <div className='harvest'>
-                  <Button
-                    disabled={parseBalance(token.claimableAmount, 18) < 0.001}
-                    onClick={() => claimVesting()}
-                    loading={loadingClaim}
-                  >
-                    Claim
-                  </Button>
-                </div>
+              </div>
+              <div className='harvest'>
+                <Button
+                  disabled={parseBalance(token.claimableAmount, 18) < 0.001}
+                  onClick={() => claimVesting()}
+                  loading={loadingClaim}
+                >
+                  Claim
+                </Button>
               </div>
             </div>
           ) : null}
 
           <div className='symbol-staked textmode'>
-            {token.namePair} LP <span className='blur-text textmode'>STAKED</span>
+            {token.namePair} LP <span className='blur-text textmode'>UNSTAKE - STAKED</span>
           </div>
           {!!walletAddress && token.allowanceFarm > 0 ? (
             <div className='wrap-amount-stake textmode'>
@@ -216,37 +266,55 @@ export default function CardFarm({
           )}
         </div>
         <div className='footer-item'>
-          <div className='btn-show-detail' onClick={() => setShowDetail(!showDetail)}>
-            {showDetail ? (
+          <div className='auto-restake-and-btn-detail'>
+            {/* {!!token && !!token.autoRestake ? (
               <>
-                {' '}
-                Hide{''}
-                <svg
-                  viewBox='0 0 24 24'
-                  color='text'
-                  width='20px'
-                  xmlns='http://www.w3.org/2000/svg'
-                  className='sc-bdvvaa eomlrw'
-                >
-                  <path d='M8.11997 14.7101L12 10.8301L15.88 14.7101C16.27 15.1001 16.9 15.1001 17.29 14.7101C17.68 14.3201 17.68 13.6901 17.29 13.3001L12.7 8.7101C12.31 8.3201 11.68 8.3201 11.29 8.7101L6.69997 13.3001C6.30997 13.6901 6.30997 14.3201 6.69997 14.7101C7.08997 15.0901 7.72997 15.1001 8.11997 14.7101Z'></path>
-                </svg>
+                <Tooltip title='Any funds you stake in this pool will be automagically harvested and restaked (compounded) for you.'>
+                  <Button shape='round' className='btn-auto-restake'>
+                    <SyncOutlined spin /> Auto
+                  </Button>
+                </Tooltip>
               </>
             ) : (
-              <>
-                {' '}
-                Details{''}
-                <svg
-                  viewBox='0 0 24 24'
-                  color='text'
-                  width='20px'
-                  xmlns='http://www.w3.org/2000/svg'
-                  className='sc-bdvvaa eomlrw'
-                >
-                  <path d='M8.11997 9.29006L12 13.1701L15.88 9.29006C16.27 8.90006 16.9 8.90006 17.29 9.29006C17.68 9.68006 17.68 10.3101 17.29 10.7001L12.7 15.2901C12.31 15.6801 11.68 15.6801 11.29 15.2901L6.69997 10.7001C6.30997 10.3101 6.30997 9.68006 6.69997 9.29006C7.08997 8.91006 7.72997 8.90006 8.11997 9.29006Z'></path>
-                </svg>
-              </>
-            )}
+              <Tooltip title='You must harvest and compound your earnings from this pool manually.'>
+                <Button shape='round' className='btn-manual-restake'>
+                  <ReloadOutlined /> Manual
+                </Button>
+              </Tooltip>
+            )} */}
+            <div className='btn-show-detail' onClick={() => setShowDetail(!showDetail)}>
+              {showDetail ? (
+                <>
+                  {' '}
+                  Hide{''}
+                  <svg
+                    viewBox='0 0 24 24'
+                    color='text'
+                    width='20px'
+                    xmlns='http://www.w3.org/2000/svg'
+                    className='sc-bdvvaa eomlrw'
+                  >
+                    <path d='M8.11997 14.7101L12 10.8301L15.88 14.7101C16.27 15.1001 16.9 15.1001 17.29 14.7101C17.68 14.3201 17.68 13.6901 17.29 13.3001L12.7 8.7101C12.31 8.3201 11.68 8.3201 11.29 8.7101L6.69997 13.3001C6.30997 13.6901 6.30997 14.3201 6.69997 14.7101C7.08997 15.0901 7.72997 15.1001 8.11997 14.7101Z'></path>
+                  </svg>
+                </>
+              ) : (
+                <>
+                  {' '}
+                  Details{''}
+                  <svg
+                    viewBox='0 0 24 24'
+                    color='text'
+                    width='20px'
+                    xmlns='http://www.w3.org/2000/svg'
+                    className='sc-bdvvaa eomlrw'
+                  >
+                    <path d='M8.11997 9.29006L12 13.1701L15.88 9.29006C16.27 8.90006 16.9 8.90006 17.29 9.29006C17.68 9.68006 17.68 10.3101 17.29 10.7001L12.7 15.2901C12.31 15.6801 11.68 15.6801 11.29 15.2901L6.69997 10.7001C6.30997 10.3101 6.30997 9.68006 6.69997 9.29006C7.08997 8.91006 7.72997 8.90006 8.11997 9.29006Z'></path>
+                  </svg>
+                </>
+              )}
+            </div>
           </div>
+
           {showDetail ? (
             <div className='detail-pool-stake'>
               <div className='total-liquidity textmode'>

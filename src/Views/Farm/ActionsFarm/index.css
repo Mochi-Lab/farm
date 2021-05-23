@@ -103,16 +103,12 @@
   font-size: 1rem;
 }
 
-.balance-lp-and-staked {
+.balance-lp,
+.staked-lp {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: center;
+  justify-content: space-between;
   align-items: stretch;
   align-content: stretch;
-}
-.balance-lp,
-.staked-lp {
-  width: 48.9%;
-  text-align: start;
 }

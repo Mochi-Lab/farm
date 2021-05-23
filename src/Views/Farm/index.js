@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Row } from 'antd';
 import CardFarm from './CardFarm';
+import CardPool from './CardPool';
 import {
   getListTokensFarmDefault,
+  getListTokensPoolDefault,
   getRootUrlView,
   getContractAddress,
 } from 'utils/getContractAddress';
@@ -11,8 +13,11 @@ import useInterval from 'utils/useInterval';
 import {
   checkAllowanceFarm,
   setListTokensFarm,
-  fetchPendingReward,
-  fetchAmountStake,
+  setListTokensPool,
+  fetchPendingRewardFarm,
+  fetchPendingRewardPool,
+  fetchAmountStakeFarm,
+  fetchAmountStakePool,
   fetchBalanceLP,
   fetchVestingTotalClaimableAmount,
   fetchTotalAmountLockedByUser,
@@ -22,69 +27,76 @@ import store from 'store/index';
 import './index.css';
 
 export default function Farm() {
-  const { walletAddress, chainId, listTokensFarm, contractAddress } = useSelector((state) => state);
+  const { walletAddress, chainId, listTokensFarm, listTokensPool, contractAddress } = useSelector(
+    (state) => state
+  );
   const [rootUrlsView, setRootUrlsView] = useState(getRootUrlView(chainId));
-  const fetchAllFarm = async () => {
+  const fetchAllFarm = useCallback(async () => {
     if (!!walletAddress && !!chainId) {
-      var listToken = !!getListTokensFarmDefault(chainId) ? getListTokensFarmDefault(chainId) : [];
-      listToken.forEach(async (pool, i) => {
-        listToken[i].pendingReward = await store.dispatch(fetchPendingReward(pool.contractFarm));
-        listToken[i].allowanceFarm = await store.dispatch(
+      var tokensFarm = !!getListTokensFarmDefault(chainId) ? getListTokensFarmDefault(chainId) : [];
+      tokensFarm.forEach(async (pool, i) => {
+        tokensFarm[i].pendingReward = await store.dispatch(
+          fetchPendingRewardFarm(pool.contractFarm)
+        );
+        tokensFarm[i].allowanceFarm = await store.dispatch(
           checkAllowanceFarm(pool.addressLP, pool.contractFarm)
         );
-        listToken[i].amountStake = await store.dispatch(fetchAmountStake(pool.contractFarm));
-        listToken[i].balanceLP = await store.dispatch(fetchBalanceLP(pool.addressLP));
-        listToken[i].claimableAmount = await store.dispatch(
+        tokensFarm[i].amountStake = await store.dispatch(fetchAmountStakeFarm(pool.contractFarm));
+        tokensFarm[i].balanceLP = await store.dispatch(fetchBalanceLP(pool.addressLP));
+        tokensFarm[i].claimableAmount = await store.dispatch(
           fetchVestingTotalClaimableAmount(pool.contractVesting)
         );
-        listToken[i].amountLocking = await store.dispatch(
+        tokensFarm[i].amountLocking = await store.dispatch(
           fetchTotalAmountLockedByUser(pool.contractVesting)
         );
       });
-      await store.dispatch(setListTokensFarm(listToken));
+      await store.dispatch(setListTokensFarm(tokensFarm));
     }
-  };
+  }, [chainId, walletAddress]);
+
+  const fetchAllPool = useCallback(async () => {
+    if (!!walletAddress && !!chainId) {
+      var tokensPool = !!getListTokensPoolDefault(chainId) ? getListTokensPoolDefault(chainId) : [];
+      tokensPool.forEach(async (pool, i) => {
+        tokensPool[i].pendingReward = await store.dispatch(
+          fetchPendingRewardPool(pool.contractPool)
+        );
+        tokensPool[i].allowanceFarm = await store.dispatch(
+          checkAllowanceFarm(pool.addressLP, pool.contractPool)
+        );
+        tokensPool[i].amountStake = await store.dispatch(fetchAmountStakePool(pool.contractPool));
+        tokensPool[i].balanceLP = await store.dispatch(fetchBalanceLP(pool.addressLP));
+      });
+      await store.dispatch(setListTokensPool(tokensPool));
+    }
+  }, [chainId, walletAddress]);
 
   useEffect(() => {
-    const fetchListFarmDefault = async () => {
+    const fetchListDefault = async () => {
       if (!walletAddress) {
         await store.dispatch(setListTokensFarm(getListTokensFarmDefault(chainId)));
+        await store.dispatch(setListTokensPool(getListTokensPoolDefault(chainId)));
       } else {
-        var listToken = !!getListTokensFarmDefault(chainId)
-          ? getListTokensFarmDefault(chainId)
-          : [];
-        listToken.forEach(async (pool, i) => {
-          listToken[i].pendingReward = await store.dispatch(fetchPendingReward(pool.contractFarm));
-          listToken[i].allowanceFarm = await store.dispatch(
-            checkAllowanceFarm(pool.addressLP, pool.contractFarm)
-          );
-          listToken[i].amountStake = await store.dispatch(fetchAmountStake(pool.contractFarm));
-          listToken[i].balanceLP = await store.dispatch(fetchBalanceLP(pool.addressLP));
-          listToken[i].claimableAmount = await store.dispatch(
-            fetchVestingTotalClaimableAmount(pool.contractVesting)
-          );
-          listToken[i].amountLocking = await store.dispatch(
-            fetchTotalAmountLockedByUser(pool.contractVesting)
-          );
-        });
-        await store.dispatch(setListTokensFarm(listToken));
+        fetchAllFarm();
+        fetchAllPool();
       }
       await store.dispatch(setContractAddress(getContractAddress(chainId)));
       setRootUrlsView(getRootUrlView(chainId));
     };
 
     if (!!chainId) {
-      fetchListFarmDefault();
+      fetchListDefault();
     }
-  }, [chainId, walletAddress, listTokensFarm]);
+  }, [chainId, walletAddress, listTokensFarm, fetchAllFarm, fetchAllPool]);
 
   useEffect(() => {
     fetchAllFarm();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listTokensFarm]);
+    fetchAllPool();
+  }, [listTokensFarm, listTokensPool, fetchAllFarm, fetchAllPool]);
 
   useInterval(() => {
     fetchAllFarm();
+    fetchAllPool();
   }, 5000);
 
   return (
@@ -92,15 +104,29 @@ export default function Farm() {
       <div className='container'>
         <div className='list-staking'>
           <Row justify='center' gutter={[30, 30]}>
-            {!!listTokensFarm
-              ? listTokensFarm.map((token, index) => (
-                  <CardFarm
-                    setListTokensFarm={setListTokensFarm}
+            {!!listTokensPool
+              ? listTokensPool.map((token, index) => (
+                  <CardPool
                     token={token}
                     key={index}
                     index={index}
                     walletAddress={walletAddress}
                     fetchAllFarm={fetchAllFarm}
+                    fetchAllPool={fetchAllPool}
+                    rootUrlsView={rootUrlsView}
+                    contractAddress={contractAddress}
+                  />
+                ))
+              : null}
+            {!!listTokensFarm
+              ? listTokensFarm.map((token, index) => (
+                  <CardFarm
+                    token={token}
+                    key={index}
+                    index={index}
+                    walletAddress={walletAddress}
+                    fetchAllFarm={fetchAllFarm}
+                    fetchAllPool={fetchAllPool}
                     rootUrlsView={rootUrlsView}
                     contractAddress={contractAddress}
                   />

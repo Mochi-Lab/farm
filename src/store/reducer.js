@@ -9,6 +9,7 @@ const initialState = {
   adminAddress: null,
   balance: 0,
   listTokensFarm: [],
+  listTokensPool: [],
   contractAddress: [],
 };
 
@@ -24,6 +25,7 @@ const rootReducer = (state = initialState, action) => {
         setChainId: null,
         balance: 0,
         listTokensFarm: [],
+        listTokensPool: [],
         contractAddress: [],
       };
     case actions.SET_WEB3:
@@ -56,6 +58,11 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         listTokensFarm: action.listTokensFarm,
+      };
+    case actions.SET_LIST_TOKENS_POOL:
+      return {
+        ...state,
+        listTokensPool: action.listTokensPool,
       };
     case actions.SET_CONTRACT_ADDRESS:
       return {
