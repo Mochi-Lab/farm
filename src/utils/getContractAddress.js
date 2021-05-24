@@ -1,6 +1,7 @@
 import Artboard1 from 'Assets/icons/Artboard1.png';
 import Artboard2 from 'Assets/icons/Artboard2.png';
 import Artboard3 from 'Assets/icons/Artboard3.png';
+import Artboard4 from 'Assets/icons/Artboard4.png';
 
 const contractAddress = {
   //BSC Mainnet
@@ -61,6 +62,7 @@ const listTokensFarmDefault = {
       apr: 0,
       yearlyMomaReward: 6215038,
       multiplier: 3,
+      autoRestake: false,
     },
   ],
   4: [
@@ -84,6 +86,7 @@ const listTokensFarmDefault = {
       apr: 0,
       yearlyMomaReward: 6215038,
       multiplier: 3,
+      autoRestake: false,
     },
     {
       icon: Artboard2,
@@ -105,6 +108,7 @@ const listTokensFarmDefault = {
       apr: 0,
       yearlyMomaReward: 3456139,
       multiplier: 2,
+      autoRestake: false,
     },
     {
       icon: Artboard3,
@@ -126,6 +130,7 @@ const listTokensFarmDefault = {
       apr: 0,
       yearlyMomaReward: 1728069,
       multiplier: 1,
+      autoRestake: false,
     },
   ],
   56: [
@@ -149,6 +154,7 @@ const listTokensFarmDefault = {
       apr: 0,
       yearlyMomaReward: 1835827,
       multiplier: 0.2,
+      autoRestake: true,
     },
     {
       icon: Artboard2,
@@ -170,6 +176,7 @@ const listTokensFarmDefault = {
       apr: 0,
       yearlyMomaReward: 917913,
       multiplier: 0.1,
+      autoRestake: false,
     },
     {
       icon: Artboard3,
@@ -191,9 +198,32 @@ const listTokensFarmDefault = {
       apr: 0,
       yearlyMomaReward: 458957,
       multiplier: 0.05,
+      autoRestake: false,
     },
   ],
   97: [
+    {
+      icon: Artboard3,
+      namePair: 'MOMA-BNB',
+      addressLP: '0x8d0d1889cf21dc3ee413c4337a862770f201b982',
+      moma: '0x7e037659F51EF31D8da997481946d833D7535730',
+      contractFarm: '0x03f5cB25f05D906e52EB7E944Ed9cabe00d57FCd',
+      contractVesting: '0x0000000000000000000000000000000000000000',
+      token0: 'BNB', // it can be an address or a symbol
+      symbolEarn: 'MOMA',
+      decimalsMoma: 18,
+      allowanceFarm: 0,
+      pendingReward: 0,
+      amountStake: 0,
+      balanceLP: 0,
+      claimableAmount: 0,
+      amountLocking: 0,
+      vestingDuration: 0,
+      apr: 0,
+      yearlyMomaReward: 458957,
+      multiplier: 0.05,
+      autoRestake: false,
+    },
     {
       icon: Artboard1,
       namePair: 'MOMA-BNB',
@@ -214,6 +244,7 @@ const listTokensFarmDefault = {
       apr: 0,
       yearlyMomaReward: 1835827,
       multiplier: 0.2,
+      autoRestake: false,
     },
     {
       icon: Artboard2,
@@ -235,27 +266,35 @@ const listTokensFarmDefault = {
       apr: 0,
       yearlyMomaReward: 917913,
       multiplier: 0.1,
+      autoRestake: false,
     },
+  ],
+};
+
+const listTokensPoolDefault = {
+  1: [],
+  4: [],
+  56: [],
+  97: [
     {
-      icon: Artboard3,
-      namePair: 'MOMA-BNB',
-      addressLP: '0x8d0d1889cf21dc3ee413c4337a862770f201b982',
-      moma: '0x7e037659F51EF31D8da997481946d833D7535730',
-      contractFarm: '0x03f5cB25f05D906e52EB7E944Ed9cabe00d57FCd',
-      contractVesting: '0x0000000000000000000000000000000000000000',
+      icon: Artboard4,
+      namePair: 'MOMA',
+      addressLP: '0x7e037659F51EF31D8da997481946d833D7535730',
+      pairTokenAndNative: '0x8d0d1889cf21dc3ee413c4337a862770f201b982',
+      contractPool: '0xd516266e93e61f45e3209423a81d784b801EAc17',
       token0: 'BNB', // it can be an address or a symbol
       symbolEarn: 'MOMA',
-      decimalsMoma: 18,
+      decimalsLP: 18,
       allowanceFarm: 0,
       pendingReward: 0,
       amountStake: 0,
       balanceLP: 0,
-      claimableAmount: 0,
-      amountLocking: 0,
       vestingDuration: 0,
       apr: 0,
-      yearlyMomaReward: 458957,
-      multiplier: 0.05,
+      yearlyMomaReward: 332605,
+      multiplier: 0.04,
+      autoRestake: false,
+      statusCompound: true,
     },
   ],
 };
@@ -266,24 +305,28 @@ const rootUrlsView = {
     viewContract: 'https://etherscan.io/address/',
     seePairInfo: 'https://v2.info.uniswap.org/pair/',
     blocksPerMonth: 195000,
+    swap: 'https://app.uniswap.org/#/swap?outputCurrency=',
   },
   4: {
     addLP: 'https://app.uniswap.org/#/add/v2/',
     viewContract: 'https://rinkeby.etherscan.io/address/',
     seePairInfo: 'https://v2.info.uniswap.org/pair/',
     blocksPerMonth: 195000,
+    swap: 'https://app.uniswap.org/#/swap?outputCurrency=',
   },
   56: {
     addLP: 'https://exchange.pancakeswap.finance/#/add/',
     viewContract: 'https://bscscan.com/address/',
     seePairInfo: 'https://pancakeswap.info/pair/',
     blocksPerMonth: 864000,
+    swap: 'https://exchange.pancakeswap.finance/#/swap?outputCurrency=',
   },
   97: {
     addLP: 'https://exchange.pancakeswap.finance/#/add/',
     viewContract: 'https://bscscan.com/address/',
     seePairInfo: 'https://pancakeswap.info/pair/',
     blocksPerMonth: 864000,
+    swap: 'https://exchange.pancakeswap.finance/#/swap?outputCurrency=',
   },
 };
 
@@ -292,6 +335,9 @@ export const getContractAddress = (_chainId) => {
 };
 export const getListTokensFarmDefault = (_chainId) => {
   return listTokensFarmDefault[_chainId];
+};
+export const getListTokensPoolDefault = (_chainId) => {
+  return listTokensPoolDefault[_chainId];
 };
 export const getRootUrlView = (_chainId) => {
   return rootUrlsView[_chainId];

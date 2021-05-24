@@ -116,7 +116,7 @@
 
 .staking-view .list-staking .item-staking .content-item .wrap-amount-stake {
   margin-top: 0.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 .staking-view .list-staking .item-staking .content-item .wrap-amount-stake .token-earn {
   font-weight: bold;
@@ -126,6 +126,7 @@
   background: #e35188;
   border-color: #e35188;
   color: white;
+  min-width: 82px;
 }
 
 .harvest .ant-btn[disabled],
@@ -151,7 +152,7 @@
 }
 
 .symbol-staked {
-  margin-top: 2.5rem;
+  margin-top: 1rem;
 }
 
 .staking-view .list-staking .item-staking .content-item .btn-stake {
@@ -178,7 +179,7 @@
   color: rgb(0 0 0 / 50%);
 }
 
-.staking-view .list-staking .item-staking .footer-item .btn-show-detail {
+.btn-show-detail {
   display: flex;
   -webkit-box-align: center;
   align-items: center;
@@ -188,7 +189,7 @@
   font-weight: bold;
   color: #e35188;
 }
-.staking-view .list-staking .item-staking .footer-item .btn-show-detail svg {
+.btn-show-detail svg {
   fill: #e35188;
 }
 
@@ -234,13 +235,13 @@
   border-radius: 1rem;
   background: #fafafa;
   padding: 0.5rem;
+  margin-top: 0.75rem;
 }
 .staking-view .list-staking .item-staking .content-item .show-vesting .title-vesting {
   font-weight: bold;
   text-align: start;
-  margin-bottom: 0.75rem;
+  margin: 0.5rem 0;
 }
-
 .staking-view .list-staking .item-staking .content-item .title-amount-claimable {
   text-align: start;
   font-weight: bold;
@@ -258,6 +259,76 @@
   justify-content: space-between;
   align-items: center;
   align-content: stretch;
+}
+
+.auto-restake-and-btn-detail {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  align-content: stretch;
+}
+
+.auto-restake-and-btn-detail .btn-auto-restake {
+  -webkit-box-align: center;
+  align-items: center;
+  border-radius: 16px;
+  display: inline-flex;
+  font-weight: 400;
+  white-space: nowrap;
+  height: 28px;
+  padding: 0px 8px;
+  font-size: 14px;
+  color: rgb(49, 208, 170);
+  background: transparent;
+  border: 2px solid rgb(49, 208, 170);
+  cursor: default;
+}
+.auto-restake-and-btn-detail .btn-manual-restake {
+  -webkit-box-align: center;
+  align-items: center;
+  border-radius: 16px;
+  display: inline-flex;
+  font-weight: 400;
+  white-space: nowrap;
+  height: 28px;
+  padding: 0px 8px;
+  font-size: 14px;
+  color: rgb(161 114 255);
+  background: transparent;
+  border: 2px solid rgb(158 110 255);
+  cursor: default;
+}
+
+.auto-restake-and-btn-detail .ant-btn > .anticon {
+  line-height: 0;
+}
+
+.btn-harvet {
+  text-align: end;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  align-content: stretch;
+  flex: auto;
+}
+
+.btn-compound {
+  margin-left: 0.5rem;
+}
+
+.staking-view .list-staking .item-staking .content-item .wrap-earn {
+  margin: 0.5rem 0;
+}
+.staking-view .list-staking .item-staking .content-item .wrap-earn h3 {
+  margin: 0;
+}
+
+.wrap-show-vesting .harvest {
+  text-align: end;
 }
 
 @media (max-width: 768px) {

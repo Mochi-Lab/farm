@@ -3,11 +3,11 @@ import { useSelector } from 'react-redux';
 import { Button, InputNumber } from 'antd';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import { parseBalance, parseBalanceNoToFixed } from 'utils/helper';
-import { depositFarm, withdrawFarm } from 'store/actions';
+import { depositPool, withdrawPool } from 'store/actions';
 import store from 'store/index';
 import './index.css';
 
-export default function ActionsFarm({ token, fetchAllFarm }) {
+export default function ActionsPool({ token, fetchAllFarm }) {
   const { web3 } = useSelector((state) => state);
 
   const [amountStake, setAmountStake] = useState();
@@ -18,7 +18,7 @@ export default function ActionsFarm({ token, fetchAllFarm }) {
   async function stakeTokenFarm() {
     if (amountStake > 0.0001) {
       setLoadingStake(true);
-      await store.dispatch(depositFarm(amountStake, token.contractFarm));
+      await store.dispatch(depositPool(amountStake, token.contractPool));
       fetchAllFarm();
       setAmountStake(null);
       setLoadingStake(false);
@@ -28,7 +28,7 @@ export default function ActionsFarm({ token, fetchAllFarm }) {
   async function withdrawTokenFarm() {
     if (amountUnstake > 0.0001) {
       setLoadingWitdraw(true);
-      await store.dispatch(withdrawFarm(amountUnstake, token.contractFarm));
+      await store.dispatch(withdrawPool(amountUnstake, token.contractPool));
       fetchAllFarm();
       setAmountUnstake(null);
       setLoadingWitdraw(false);

@@ -82,7 +82,7 @@ export const listInjectNetwork = {
   },
 };
 
-export const networkDefault = 1;
+export const networkDefault = 97;
 
 export const getWeb3List = (_chainId) => {
   return web3Default[_chainId];

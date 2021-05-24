@@ -287,6 +287,10 @@ div.line-loading {
   color: #1890ff !important;
 }
 
+.ant-tooltip-inner {
+  border-radius: 1rem !important;
+}
+
 @media (max-width: 992px) {
   .logo {
     width: 60px;
