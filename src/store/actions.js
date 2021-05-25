@@ -493,9 +493,9 @@ export const fecthApyPool = (addressLP, contractPool, yearlyMomaReward) => async
     const tokenLP = new web3.eth.Contract(ERC20.abi, addressLP);
     const totalLpTokenInPool = await tokenLP.methods.balanceOf(contractPool).call();
     const yearlyMomaRewardAllocation = yearlyMomaReward * 10 ** 18;
-    let apr = (yearlyMomaRewardAllocation / totalLpTokenInPool) * 100;
-    let dailyAPR = apr / 365 / 100;
-    let apy = (1 + dailyAPR) ** 365;
+    let apr = yearlyMomaRewardAllocation / totalLpTokenInPool;
+    let dailyAPR = apr / 365;
+    let apy = (1 + dailyAPR) ** 365 - 1;
     apy = roundToTwoDp(apy * 100);
     return apy;
   } catch (error) {
