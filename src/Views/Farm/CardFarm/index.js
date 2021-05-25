@@ -1,7 +1,7 @@
 import { connectWeb3Modal } from 'Connections/web3Modal';
 import { useEffect, useState } from 'react';
-import { Col, Button /* , Tooltip */ } from 'antd';
-// import { SyncOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Col, Button, Tooltip } from 'antd';
+import { /* SyncOutlined, ReloadOutlined */ QuestionCircleOutlined } from '@ant-design/icons';
 
 import {
   approveAll,
@@ -216,22 +216,36 @@ export default function CardFarm({
           {(vestingDuration > 0 || token.amountLocking > 0) && !!showDetailVesting ? (
             <div className='wrap-show-vesting'>
               <div className='show-vesting textmode'>
-                <div className='title-vesting'>Locked reward: </div>
+                <div className='title-vesting'>
+                  Locked reward:{' '}
+                  <Tooltip
+                    title={`After harvesting your MOMA, it is locked for ${vestingDuration} months and appears here. Over the next ${vestingDuration} months, harvested MOMA will linearly become claimable in the "Claimable rewards" section below`}
+                  >
+                    <QuestionCircleOutlined />
+                  </Tooltip>{' '}
+                </div>
                 <div className='token-vesting'>
                   <h3 className='textmode'>{parseBalance(token.amountLocking, 18)}</h3>
                 </div>
               </div>
               <div className='show-vesting textmode'>
-                <div className='title-vesting'>Reward Vesting: </div>
+                <div className='title-vesting'>Reward Vesting:</div>
                 <div className='token-vesting'>
                   <h3 className='textmode'>{vestingDuration} months</h3>
                 </div>
               </div>
 
               <div className='wrap-amount-stake textmode'>
-                <div className='title-amount-claimable textmode'>Claimable reward</div>
+                <div className='title-amount-claimable textmode'>
+                  Claimable reward:{' '}
+                  <Tooltip
+                    title={`The rewards shown here are instantly claimable now. Because you decided for the ${vestingDuration} months pool, it will take ${vestingDuration} months until all of your locked rewards are claimable here`}
+                  >
+                    <QuestionCircleOutlined />
+                  </Tooltip>{' '}
+                </div>
                 <div className='token-earn'>
-                  <h3 className='textmode'>{parseBalance(token.claimableAmount, 18)}</h3>
+                  <h3 className='textmode text-pink'>{parseBalance(token.claimableAmount, 18)}</h3>
                 </div>
               </div>
               <div className='harvest'>
