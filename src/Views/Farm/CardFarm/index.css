@@ -121,6 +121,11 @@
 .staking-view .list-staking .item-staking .content-item .wrap-amount-stake .token-earn {
   font-weight: bold;
 }
+
+.staking-view .list-staking .item-staking .content-item .wrap-amount-stake .token-earn .text-pink {
+  font-weight: bold;
+  color: #cd2076 !important;
+}
 .harvest .ant-btn {
   border-radius: 0.75rem;
   background: #e35188;
@@ -246,6 +251,7 @@
   text-align: start;
   font-weight: bold;
   margin: 0.5rem 0;
+  color: #e35188 !important;
 }
 
 .multier-pool .moma-per-block {
