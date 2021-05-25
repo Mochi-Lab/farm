@@ -141,7 +141,7 @@ const listTokensFarmDefault = {
       moma: '0xB72842D6F5feDf91D22d56202802Bb9A79C6322E',
       contractFarm: '0x01A2cE7925dc8E07F23a3Fd5677040811809066b',
       contractVesting: '0xC4a3829ECDbE8EEc07052D9631a6B52ea5deA60E',
-      token0: 'BNB', // it can be an address or a symbol
+      token0: 'BNB', // it can be an address0x94e47b2c97781d506E00775787c815481A307F21 or a symbol
       symbolEarn: 'MOMA',
       decimalsMoma: 18,
       allowanceFarm: 0,
@@ -274,7 +274,28 @@ const listTokensFarmDefault = {
 const listTokensPoolDefault = {
   1: [],
   4: [],
-  56: [],
+  56: [
+    {
+      icon: Artboard4,
+      namePair: 'MOMA',
+      addressLP: '0xB72842D6F5feDf91D22d56202802Bb9A79C6322E',
+      pairTokenAndNative: '0x94e47b2c97781d506E00775787c815481A307F21',
+      contractPool: '0xf84718a7B515124009A5B53F0e8c763935FeEb82',
+      token0: 'BNB', // it can be an address or a symbol
+      symbolEarn: 'MOMA',
+      decimalsLP: 18,
+      allowanceFarm: 0,
+      pendingReward: 0,
+      amountStake: 0,
+      balanceLP: 0,
+      vestingDuration: 0,
+      apr: 0,
+      yearlyMomaReward: 367165,
+      multiplier: 0.04,
+      autoRestake: false,
+      statusCompound: true,
+    },
+  ],
   97: [
     {
       icon: Artboard4,
