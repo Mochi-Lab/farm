@@ -6,9 +6,9 @@ import { Col, Button /* , Tooltip */ } from 'antd';
 import {
   approveAll,
   depositPool,
-  fecthApyPool,
-  fecthMultiplierPool,
-  fecthTotalTokenPool,
+  fetchApyPool,
+  fetchMultiplierPool,
+  fetchTotalTokenPool,
   withdrawPool,
   calcPercentStakedPool,
 } from 'store/actions';
@@ -40,7 +40,7 @@ export default function CardPool({
   useEffect(() => {
     const calculateTotalLock = async () => {
       let totalToekLP =
-        (await store.dispatch(fecthTotalTokenPool(token.addressLP, token.contractPool))) /
+        (await store.dispatch(fetchTotalTokenPool(token.addressLP, token.contractPool))) /
         Math.pow(10, token.decimalsLP);
 
       let valueTotalLiquidity = parseInt(totalToekLP);
@@ -51,10 +51,10 @@ export default function CardPool({
     const fetchDataPool = async () => {
       setApyPool(
         await store.dispatch(
-          fecthApyPool(token.addressLP, token.contractPool, token.yearlyMomaReward)
+          fetchApyPool(token.addressLP, token.contractPool, token.yearlyMomaReward)
         )
       );
-      setMultiplier(await store.dispatch(fecthMultiplierPool(token.contractPool)));
+      setMultiplier(await store.dispatch(fetchMultiplierPool(token.contractPool)));
       setPercentInPool(
         await store.dispatch(calcPercentStakedPool(token.addressLP, token.contractPool))
       );
