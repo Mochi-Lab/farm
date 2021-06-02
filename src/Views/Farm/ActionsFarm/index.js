@@ -77,7 +77,7 @@ export default function ActionsFarm({ token, fetchAllFarm, percentInPool }) {
         </div>
         <div className='staked-lp'>
           <span className='blur-text textmode'>Your pool share: </span>
-          <span className='textmode staked-lp-amount'>{percentInPool} %</span>
+          <span className='textmode staked-lp-amount'>{percentInPool}%</span>
         </div>
       </div>
       <div className='input-amount'>

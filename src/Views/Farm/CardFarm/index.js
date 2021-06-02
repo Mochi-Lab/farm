@@ -7,11 +7,11 @@ import {
   approveAll,
   depositFarm,
   claimTotalVesting,
-  fecthAprPool,
-  fecthMultiplierFarm,
-  fecthTotalTokenLP,
-  fecthPriceTokenWithUSDT,
-  fecthVestingDuration,
+  fetchAprPool,
+  fetchMultiplierFarm,
+  fetchTotalTokenLP,
+  fetchPriceTokenWithUSDT,
+  fetchVestingDuration,
   calcPercentStakedFarm,
 } from 'store/actions';
 
@@ -44,18 +44,18 @@ export default function CardFarm({
   useEffect(() => {
     const calculateTotalLock = async () => {
       let priceToken = await store.dispatch(
-        fecthPriceTokenWithUSDT(contractAddress, token.addressLP, token.moma, token.decimalsMoma)
+        fetchPriceTokenWithUSDT(contractAddress, token.addressLP, token.moma, token.decimalsMoma)
       );
 
       priceToken = !!priceToken && priceToken > 0 ? priceToken : 0;
 
       let totalToekLP =
         (await store.dispatch(
-          fecthTotalTokenLP(token.addressLP, token.contractFarm, token.moma)
+          fetchTotalTokenLP(token.addressLP, token.contractFarm, token.moma)
         )) >=
         10 ** 16
           ? (await store.dispatch(
-              fecthTotalTokenLP(token.addressLP, token.contractFarm, token.moma)
+              fetchTotalTokenLP(token.addressLP, token.contractFarm, token.moma)
             )) /
             10 ** 18
           : 0;
@@ -67,13 +67,13 @@ export default function CardFarm({
     const fetchDataPool = async () => {
       setAprPool(
         await store.dispatch(
-          fecthAprPool(token.addressLP, token.contractFarm, token.moma, token.yearlyMomaReward)
+          fetchAprPool(token.addressLP, token.contractFarm, token.moma, token.yearlyMomaReward)
         )
       );
-      setMultiplier(await store.dispatch(fecthMultiplierFarm(token.contractFarm)));
+      setMultiplier(await store.dispatch(fetchMultiplierFarm(token.contractFarm)));
       setVestingDuration(
         await store.dispatch(
-          fecthVestingDuration(token.contractVesting, rootUrlsView.blocksPerMonth)
+          fetchVestingDuration(token.contractVesting, rootUrlsView.blocksPerMonth)
         )
       );
       setPercentInPool(
