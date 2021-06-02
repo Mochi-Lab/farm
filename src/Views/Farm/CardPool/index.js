@@ -10,6 +10,7 @@ import {
   fecthMultiplierPool,
   fecthTotalTokenPool,
   withdrawPool,
+  calcPercentStakedPool,
 } from 'store/actions';
 
 import { parseBalance } from 'utils/helper';
@@ -34,6 +35,7 @@ export default function CardPool({
   const [apyPool, setApyPool] = useState(0);
   const [multiplier, setMultiplier] = useState(0);
   const [valueTotalLiquidity, setValueTotalLiquidity] = useState(0);
+  const [percentInPool, setPercentInPool] = useState(0);
 
   useEffect(() => {
     const calculateTotalLock = async () => {
@@ -53,6 +55,9 @@ export default function CardPool({
         )
       );
       setMultiplier(await store.dispatch(fecthMultiplierPool(token.contractPool)));
+      setPercentInPool(
+        await store.dispatch(calcPercentStakedPool(token.addressLP, token.contractPool))
+      );
     };
     fetchDataPool();
     calculateTotalLock();
@@ -163,11 +168,15 @@ export default function CardPool({
           </div>
 
           <div className='symbol-staked textmode'>
-            {token.namePair} <span className='blur-text textmode'>UNSTAKE - STAKED </span>
+            {token.namePair} <span className='blur-text textmode'>AVAILABLE - STAKED </span>
           </div>
           {!!walletAddress && token.allowanceFarm > 0 ? (
             <div className='wrap-amount-stake textmode'>
-              <ActionsPool token={token} fetchAllFarm={fetchAllFarm} />
+              <ActionsPool
+                token={token}
+                fetchAllFarm={fetchAllFarm}
+                percentInPool={percentInPool}
+              />
             </div>
           ) : (
             <Button

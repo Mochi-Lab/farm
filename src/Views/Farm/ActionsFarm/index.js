@@ -7,7 +7,7 @@ import { depositFarm, withdrawFarm } from 'store/actions';
 import store from 'store/index';
 import './index.css';
 
-export default function ActionsFarm({ token, fetchAllFarm }) {
+export default function ActionsFarm({ token, fetchAllFarm, percentInPool }) {
   const { web3 } = useSelector((state) => state);
 
   const [amountStake, setAmountStake] = useState();
@@ -56,7 +56,7 @@ export default function ActionsFarm({ token, fetchAllFarm }) {
     <div className='input-stake-withdraw'>
       <div className='balance-lp-and-staked'>
         <div className='balance-lp'>
-          <span className='blur-text textmode'>Unstake: </span>
+          <span className='blur-text textmode'>Available: </span>
           <span
             className='textmode balance-lp-amount'
             style={{ cursor: 'pointer' }}
@@ -74,6 +74,10 @@ export default function ActionsFarm({ token, fetchAllFarm }) {
           >
             {parseBalance(token.amountStake, 18)}
           </span>
+        </div>
+        <div className='staked-lp'>
+          <span className='blur-text textmode'>Your pool share: </span>
+          <span className='textmode staked-lp-amount'>{percentInPool} %</span>
         </div>
       </div>
       <div className='input-amount'>
