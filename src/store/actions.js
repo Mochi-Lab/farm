@@ -504,3 +504,38 @@ export const fecthApyPool = (addressLP, contractPool, yearlyMomaReward) => async
     return false;
   }
 };
+
+export const calcPercentStakedPool = (addressLP, contractPool) => async (dispatch, getState) => {
+  const { walletAddress, web3 } = getState();
+  if (!!walletAddress) {
+    try {
+      const tokenLP = new web3.eth.Contract(ERC20.abi, addressLP);
+      const totalLpTokenInPool = await tokenLP.methods.balanceOf(contractPool).call();
+      const instaneFarm = new web3.eth.Contract(MomaFarm.abi, contractPool);
+      const amountStakedPool = await instaneFarm.methods.userInfo(walletAddress).call();
+      const percentInPool = ((amountStakedPool.amount / totalLpTokenInPool) * 100).toFixed(2);
+      return percentInPool;
+    } catch (error) {
+      console.log(error);
+      // message.error('Fecth Apy Error !');
+      return false;
+    }
+  }
+};
+export const calcPercentStakedFarm = (addressLP, contractFarm) => async (dispatch, getState) => {
+  const { walletAddress, web3 } = getState();
+  if (!!walletAddress) {
+    try {
+      const tokenLP = new web3.eth.Contract(ERC20.abi, addressLP);
+      const totalLpTokenInPool = await tokenLP.methods.balanceOf(contractFarm).call();
+      const instaneFarm = new web3.eth.Contract(Farm.abi, contractFarm);
+      const amountStakedPool = await instaneFarm.methods.userInfo(walletAddress).call();
+      const percentInFarm = ((amountStakedPool.amount / totalLpTokenInPool) * 100).toFixed(2);
+      return percentInFarm;
+    } catch (error) {
+      console.log(error);
+      // message.error('Fecth Apy Error !');
+      return false;
+    }
+  }
+};

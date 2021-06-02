@@ -12,6 +12,7 @@ import {
   fecthTotalTokenLP,
   fecthPriceTokenWithUSDT,
   fecthVestingDuration,
+  calcPercentStakedFarm,
 } from 'store/actions';
 
 import { parseBalance } from 'utils/helper';
@@ -38,6 +39,7 @@ export default function CardFarm({
   const [multiplier, setMultiplier] = useState(0);
   const [vestingDuration, setVestingDuration] = useState(0);
   const [valueTotalLiquidity, setValueTotalLiquidity] = useState(0);
+  const [percentInPool, setPercentInPool] = useState(0);
 
   useEffect(() => {
     const calculateTotalLock = async () => {
@@ -73,6 +75,9 @@ export default function CardFarm({
         await store.dispatch(
           fecthVestingDuration(token.contractVesting, rootUrlsView.blocksPerMonth)
         )
+      );
+      setPercentInPool(
+        await store.dispatch(calcPercentStakedFarm(token.addressLP, token.contractFarm))
       );
     };
     fetchDataPool();
@@ -261,11 +266,15 @@ export default function CardFarm({
           ) : null}
 
           <div className='symbol-staked textmode'>
-            {token.namePair} LP <span className='blur-text textmode'>UNSTAKE - STAKED</span>
+            {token.namePair} LP <span className='blur-text textmode'>AVAILABLE - STAKED </span>
           </div>
           {!!walletAddress && token.allowanceFarm > 0 ? (
             <div className='wrap-amount-stake textmode'>
-              <ActionsFarm token={token} fetchAllFarm={fetchAllFarm} />
+              <ActionsFarm
+                token={token}
+                fetchAllFarm={fetchAllFarm}
+                percentInPool={percentInPool}
+              />
             </div>
           ) : (
             <Button
