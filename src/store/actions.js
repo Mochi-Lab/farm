@@ -195,7 +195,14 @@ export const fecthAprPool = (addressLP, contractFarm, moma, yearlyMomaReward) =>
     const totalSupply = await pair.methods.totalSupply().call();
     const LpTokenPriceMoma = (amountMoma * 2) / totalSupply;
     const poolLiquidityMoma = totalLpTokenInPool * LpTokenPriceMoma;
-    const yearlyMomaRewardAllocation = yearlyMomaReward * 10 ** 18;
+    const farm = new web3.eth.Contract(Farm.abi, contractFarm);
+    const currentBlock = await web3.eth.getBlockNumber();
+    const multiplier = await farm.methods.getMultiplier(currentBlock, currentBlock + 1).call();
+    const reducingCycle = await farm.methods.reducingCycle().call();
+    const rewardPerBlock = await farm.methods.rewardPerBlock().call();
+    const yearlyMomaRewardAllocation = (multiplier * rewardPerBlock * reducingCycle * 12) / 1e12;
+
+    // const yearlyMomaRewardAllocation = yearlyMomaReward * 10 ** 18;
     let apr = (yearlyMomaRewardAllocation / poolLiquidityMoma) * 100;
     apr = roundToTwoDp(apr);
     return apr;
@@ -299,8 +306,8 @@ export const fecthVestingDuration = (contractVesting, blocksPerMonth) => async (
 export const depositFarm = (amountWei, contractFarm) => async (dispatch, getState) => {
   const { web3, walletAddress } = getState();
   try {
-    const instaneFarm = new web3.eth.Contract(Farm.abi, contractFarm);
-    await instaneFarm.methods
+    const farm = new web3.eth.Contract(Farm.abi, contractFarm);
+    await farm.methods
       .deposit(amountWei)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
@@ -325,8 +332,8 @@ export const depositFarm = (amountWei, contractFarm) => async (dispatch, getStat
 export const withdrawFarm = (amountWei, contractFarm) => async (dispatch, getState) => {
   const { web3, walletAddress } = getState();
   try {
-    const instaneFarm = new web3.eth.Contract(Farm.abi, contractFarm);
-    await instaneFarm.methods
+    const farm = new web3.eth.Contract(Farm.abi, contractFarm);
+    await farm.methods
       .withdraw(amountWei)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
@@ -347,8 +354,8 @@ export const withdrawFarm = (amountWei, contractFarm) => async (dispatch, getSta
 export const fetchPendingRewardFarm = (contractFarm) => async (dispatch, getState) => {
   const { web3, walletAddress } = getState();
   try {
-    const instaneFarm = new web3.eth.Contract(Farm.abi, contractFarm);
-    let pendingReward = await instaneFarm.methods.pendingReward(walletAddress).call();
+    const farm = new web3.eth.Contract(Farm.abi, contractFarm);
+    let pendingReward = await farm.methods.pendingReward(walletAddress).call();
     return pendingReward;
   } catch (error) {
     console.log(error);
@@ -358,8 +365,8 @@ export const fetchPendingRewardFarm = (contractFarm) => async (dispatch, getStat
 export const fetchAmountStakeFarm = (contractFarm) => async (dispatch, getState) => {
   const { web3, walletAddress } = getState();
   try {
-    const instaneFarm = new web3.eth.Contract(Farm.abi, contractFarm);
-    let amountStake = await instaneFarm.methods.userInfo(walletAddress).call();
+    const farm = new web3.eth.Contract(Farm.abi, contractFarm);
+    let amountStake = await farm.methods.userInfo(walletAddress).call();
     return amountStake.amount;
   } catch (error) {
     console.log(error);
@@ -370,11 +377,9 @@ export const fetchAmountStakeFarm = (contractFarm) => async (dispatch, getState)
 export const fecthMultiplierFarm = (contractFarm) => async (dispatch, getState) => {
   const { web3 } = getState();
   try {
-    const instaneFarm = new web3.eth.Contract(Farm.abi, contractFarm);
-    const blockCurrent = await web3.eth.getBlockNumber();
-    const rewardPerBlock = await instaneFarm.methods
-      .getMultiplier(blockCurrent, blockCurrent + 1)
-      .call();
+    const farm = new web3.eth.Contract(Farm.abi, contractFarm);
+    const currentBlock = await web3.eth.getBlockNumber();
+    const rewardPerBlock = await farm.methods.getMultiplier(currentBlock, currentBlock + 1).call();
     return rewardPerBlock;
   } catch (error) {
     console.log(error);
@@ -413,8 +418,8 @@ export const depositPool = (amountWei, contractPool) => async (dispatch, getStat
 export const withdrawPool = (amountWei, contractPool) => async (dispatch, getState) => {
   const { web3, walletAddress } = getState();
   try {
-    const instaneFarm = new web3.eth.Contract(MomaFarm.abi, contractPool);
-    await instaneFarm.methods
+    const farm = new web3.eth.Contract(MomaFarm.abi, contractPool);
+    await farm.methods
       .withdraw(amountWei)
       .send({ from: walletAddress })
       .on('receipt', (receipt) => {
@@ -435,8 +440,8 @@ export const withdrawPool = (amountWei, contractPool) => async (dispatch, getSta
 export const fetchPendingRewardPool = (contractPool) => async (dispatch, getState) => {
   const { web3, walletAddress } = getState();
   try {
-    const instaneFarm = new web3.eth.Contract(MomaFarm.abi, contractPool);
-    let pendingMoma = await instaneFarm.methods.pendingMoma(walletAddress).call();
+    const farm = new web3.eth.Contract(MomaFarm.abi, contractPool);
+    let pendingMoma = await farm.methods.pendingMoma(walletAddress).call();
     return pendingMoma;
   } catch (error) {
     console.log(error);
@@ -447,8 +452,8 @@ export const fetchPendingRewardPool = (contractPool) => async (dispatch, getStat
 export const fetchAmountStakePool = (contractPool) => async (dispatch, getState) => {
   const { web3, walletAddress } = getState();
   try {
-    const instaneFarm = new web3.eth.Contract(MomaFarm.abi, contractPool);
-    let amountStakedPool = await instaneFarm.methods.userInfo(walletAddress).call();
+    const farm = new web3.eth.Contract(MomaFarm.abi, contractPool);
+    let amountStakedPool = await farm.methods.userInfo(walletAddress).call();
     return amountStakedPool.amount;
   } catch (error) {
     console.log(error);
@@ -459,11 +464,9 @@ export const fetchAmountStakePool = (contractPool) => async (dispatch, getState)
 export const fecthMultiplierPool = (contractPool) => async (dispatch, getState) => {
   const { web3 } = getState();
   try {
-    const instaneFarm = new web3.eth.Contract(MomaFarm.abi, contractPool);
-    const blockCurrent = await web3.eth.getBlockNumber();
-    const rewardPerBlock = await instaneFarm.methods
-      .getMultiplier(blockCurrent, blockCurrent + 1)
-      .call();
+    const farm = new web3.eth.Contract(MomaFarm.abi, contractPool);
+    const currentBlock = await web3.eth.getBlockNumber();
+    const rewardPerBlock = await farm.methods.getMultiplier(currentBlock, currentBlock + 1).call();
     return rewardPerBlock;
   } catch (error) {
     console.log(error);
@@ -492,7 +495,13 @@ export const fecthApyPool = (addressLP, contractPool, yearlyMomaReward) => async
   try {
     const tokenLP = new web3.eth.Contract(ERC20.abi, addressLP);
     const totalLpTokenInPool = await tokenLP.methods.balanceOf(contractPool).call();
-    const yearlyMomaRewardAllocation = yearlyMomaReward * 10 ** 18;
+    const farm = new web3.eth.Contract(MomaFarm.abi, contractPool);
+    const currentBlock = await web3.eth.getBlockNumber();
+    const multiplier = await farm.methods.getMultiplier(currentBlock, currentBlock + 1).call();
+    const reducingCycle = await farm.methods.reducingCycle().call();
+    const rewardPerBlock = await farm.methods.momaPerBlock().call();
+    const yearlyMomaRewardAllocation = (multiplier * rewardPerBlock * reducingCycle * 12) / 1e12;
+    // const yearlyMomaRewardAllocation = yearlyMomaReward * 10 ** 18;
     let apr = yearlyMomaRewardAllocation / totalLpTokenInPool;
     let dailyAPR = apr / 365;
     let apy = (1 + dailyAPR) ** 365 - 1;
@@ -511,8 +520,8 @@ export const calcPercentStakedPool = (addressLP, contractPool) => async (dispatc
     try {
       const tokenLP = new web3.eth.Contract(ERC20.abi, addressLP);
       const totalLpTokenInPool = await tokenLP.methods.balanceOf(contractPool).call();
-      const instaneFarm = new web3.eth.Contract(MomaFarm.abi, contractPool);
-      const amountStakedPool = await instaneFarm.methods.userInfo(walletAddress).call();
+      const farm = new web3.eth.Contract(MomaFarm.abi, contractPool);
+      const amountStakedPool = await farm.methods.userInfo(walletAddress).call();
       const percentInPool = ((amountStakedPool.amount / totalLpTokenInPool) * 100).toFixed(2);
       return percentInPool;
     } catch (error) {
@@ -528,8 +537,8 @@ export const calcPercentStakedFarm = (addressLP, contractFarm) => async (dispatc
     try {
       const tokenLP = new web3.eth.Contract(ERC20.abi, addressLP);
       const totalLpTokenInPool = await tokenLP.methods.balanceOf(contractFarm).call();
-      const instaneFarm = new web3.eth.Contract(Farm.abi, contractFarm);
-      const amountStakedPool = await instaneFarm.methods.userInfo(walletAddress).call();
+      const farm = new web3.eth.Contract(Farm.abi, contractFarm);
+      const amountStakedPool = await farm.methods.userInfo(walletAddress).call();
       const percentInFarm = ((amountStakedPool.amount / totalLpTokenInPool) * 100).toFixed(2);
       return percentInFarm;
     } catch (error) {
