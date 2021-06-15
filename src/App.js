@@ -1,5 +1,6 @@
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import NavBar from 'Components/NavBar';
+import Footer from 'Components/Footer';
 import IconLoading from 'Components/IconLoading';
 
 import { lazy, Suspense, useEffect } from 'react';
@@ -17,7 +18,7 @@ function App() {
     fetchDataInit();
   }, []);
   return (
-    <div style={{ height: '100vh' }}>
+    <div style={{ minHeight: '100vh' }}>
       <BrowserRouter>
         <div className='page content'>
           <NavBar />
@@ -33,6 +34,7 @@ function App() {
             </Switch>
           </Suspense>
         </div>
+        <Footer />
       </BrowserRouter>
     </div>
   );

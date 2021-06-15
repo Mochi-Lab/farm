@@ -150,6 +150,11 @@
   border-bottom-color: transparent;
 }
 
+.text-blur {
+  opacity: 0.7;
+  font-weight: unset;
+}
+
 @media (max-width: 767px) {
   .barsMenu {
     display: inline-block;
