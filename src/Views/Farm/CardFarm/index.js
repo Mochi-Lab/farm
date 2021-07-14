@@ -112,6 +112,10 @@ export default function CardFarm({
     setLoadingClaim(false);
   }
 
+  function isInt(n) {
+    return Number(n) === n && n % 1 === 0;
+  }
+
   return (
     <Col xs={{ span: 24 }} md={{ span: 12 }} xl={{ span: 8 }} xxl={{ span: 6 }}>
       <div className='item-staking'>
@@ -125,7 +129,9 @@ export default function CardFarm({
             <div className='box-multi'>
               <div className='multier-pool'>
                 <h3>
-                  {parseBalance(multiplier, 12) * token.multiplier}{' '}
+                  {isInt(parseBalance(multiplier, 12) * token.multiplier)
+                    ? parseInt(parseBalance(multiplier, 12) * token.multiplier)
+                    : parseFloat(parseBalance(multiplier, 12) * token.multiplier).toFixed(2)}{' '}
                   <span className='moma-per-block'>{token.symbolEarn}/Block</span>
                 </h3>
               </div>

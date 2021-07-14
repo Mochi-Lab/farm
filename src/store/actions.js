@@ -21,6 +21,7 @@ export const setWeb3 = (web3) => async (dispatch, getState) => {
 
 export const SET_CHAINID = 'SET_CHAINID';
 export const setChainId = (chainId) => (dispatch) => {
+  localStorage.setItem('chainId', chainId);
   dispatch({ type: SET_CHAINID, chainId });
 };
 

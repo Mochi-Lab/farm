@@ -62,7 +62,7 @@
   color: var(--color) !important;
 }
 
-.menuCon .leftMenu {
+.info-chain .leftMenu {
   float: left;
   margin-left: 0.5rem;
 }
@@ -95,15 +95,71 @@
   margin-left: 0.75rem;
   margin-right: 3rem;
 }
+
+.dropdown_network_header {
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+  transition: 0.3s;
+  border-radius: 30px;
+  font-weight: 500;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  background-color: #f0f5f9;
+}
+
+.sidebar-menu-network-icon {
+  width: 30px;
+  border-radius: 100%;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.sidebar-menu-network-label {
+  margin: 0 8px;
+  flex: 1 1;
+}
+
+.dropdown-select-chain {
+  border-radius: 1rem !important;
+  background-color: #ffffff;
+}
+
+.dropdown-select-chain .ant-dropdown-menu-item-group-title {
+  text-align: center;
+}
+
+.dropdown-select-chain .ant-dropdown-menu-item {
+  border-radius: 1rem !important;
+}
+
+.dropdown-select-chain img {
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
+  margin-right: 12px;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  box-shadow: 0 0 0 2px #dfe8f9;
+}
+.dropdown-select-chain .ant-dropdown-menu-item-group-list {
+  padding-bottom: 5px;
+}
+
 @media (max-width: 1437px) {
   .leftMenu {
     width: 20%;
   }
 
-  .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item {
+  .info-chain .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item {
     margin: 0 10px;
   }
-  .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item a {
+  .info-chain .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item a {
     padding: 10px 10px;
   }
 }
@@ -111,10 +167,10 @@
   .leftMenu {
     width: 15%;
   }
-  .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item {
+  .info-chain .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item {
     margin: 0 7px;
   }
-  .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item a {
+  .info-chain .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item a {
     padding: 10px 7px;
   }
 }
@@ -123,10 +179,10 @@
     width: 13%;
   }
 
-  .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item {
+  .info-chain .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item {
     margin: 0 5px;
   }
-  .menuCon .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item a {
+  .info-chain .ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item a {
     padding: 10px 5px;
   }
 }

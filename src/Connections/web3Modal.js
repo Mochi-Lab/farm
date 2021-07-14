@@ -3,12 +3,15 @@ import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { setChainId, setWeb3, setAddress, logout } from 'store/actions';
 import store from 'store/index';
+import { getWeb3List } from 'utils/getWeb3List';
+import { numberToHex } from 'web3-utils';
 
 const rpcSupport = {
   1: 'https://mainnet.infura.io/v3/bd65aacb68614592bb014d78c92a9786',
   4: 'https://rinkeby.infura.io/v3/bd65aacb68614592bb014d78c92a9786',
   97: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
   56: 'https://bsc-dataseed.binance.org/',
+  137: 'https://rpc-mainnet.maticvigil.com',
 };
 
 const providerOptions = {
@@ -24,10 +27,92 @@ const providerOptions = {
   },
 };
 
+const paramsSwitchNetwork = {
+  56: [
+    {
+      chainId: '0x38',
+      chainName: 'BSC - Mainnet',
+      nativeCurrency: {
+        name: 'BNB',
+        symbol: 'BNB',
+        decimals: 18,
+      },
+      rpcUrls: ['https://bsc-dataseed.binance.org/'],
+      blockExplorerUrls: ['https://bscscan.com/'],
+    },
+  ],
+  97: [
+    {
+      chainId: '0x61',
+      chainName: 'BSC - Testnet',
+      nativeCurrency: {
+        name: 'BNB',
+        symbol: 'BNB',
+        decimals: 18,
+      },
+      rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
+      blockExplorerUrls: ['https://testnet.bscscan.com/'],
+    },
+  ],
+  137: [
+    {
+      chainId: '0x89',
+      chainName: 'Polygon',
+      nativeCurrency: {
+        name: 'MATIC',
+        symbol: 'MATIC',
+        decimals: 18,
+      },
+      rpcUrls: ['https://rpc-mainnet.maticvigil.com'],
+      blockExplorerUrls: ['https://polygonscan.com/'],
+    },
+  ],
+};
+
+export const selectChain = async (chainId, walletAddress, isETH) => {
+  if (!!rpcSupport[chainId]) {
+    if (!!walletAddress) {
+      isETH ? injectNetworkEthereum(chainId) : injectNetworkNoEthereum(chainId);
+    } else {
+      await store.dispatch(setWeb3(getWeb3List(chainId).web3Default));
+    }
+    await store.dispatch(setChainId(chainId));
+  } else {
+    alert('Farming does not support this network');
+  }
+};
+
+// Switch for chains is not ETH
+export const injectNetworkNoEthereum = async (chainId) => {
+  await window.ethereum.request({
+    method: 'wallet_addEthereumChain',
+    params: paramsSwitchNetwork[chainId],
+  });
+};
+
+// Switch for chains in ecosystems of Ethereum
+export const injectNetworkEthereum = async (chainId) => {
+  await window.ethereum.request({
+    method: 'wallet_switchEthereumChain',
+    params: [
+      {
+        chainId: numberToHex(chainId),
+      },
+    ],
+  });
+};
+
 export const connectWeb3Modal = async () => {
+  const { chainId } = store.getState();
+
+  if (!!paramsSwitchNetwork[chainId]) {
+    injectNetworkNoEthereum(chainId);
+  } else {
+    injectNetworkEthereum(chainId);
+  }
+
   const web3Modal = new Web3Modal({
-    cacheProvider: false, // optional
-    // network: 'mainnet',
+    cacheProvider: true, // optional
     providerOptions, // required
   });
 
@@ -35,12 +120,12 @@ export const connectWeb3Modal = async () => {
 
   const web3 = new Web3(provider);
 
-  let chainId = await web3.eth.net.getId();
+  let chainID = await web3.eth.net.getId();
 
-  if (!!rpcSupport[chainId]) {
+  if (!!rpcSupport[chainID]) {
     let accounts = await web3.eth.getAccounts();
 
-    store.dispatch(setChainId(chainId));
+    store.dispatch(setChainId(chainID));
     store.dispatch(setWeb3(web3));
 
     if (accounts.length > 0) {
@@ -51,16 +136,16 @@ export const connectWeb3Modal = async () => {
   }
 
   // Subscribe to accounts change
-  provider.on('accountsChanged', (accounts) => {
+  provider.on('accountsChanged', async (accounts) => {
     store.dispatch(setAddress(accounts[0]));
   });
 
-  // Subscribe to chainId change
-  provider.on('chainChanged', async (chainId) => {
-    chainId = parseInt(web3.utils.hexToNumber(chainId));
-    if (!!rpcSupport[chainId]) {
-      await store.dispatch(setChainId(chainId));
-      await store.dispatch(setWeb3(web3));
+  // Subscribe to chainID change
+  provider.on('chainChanged', async (chainID) => {
+    chainID = parseInt(web3.utils.hexToNumber(chainID));
+    if (!!rpcSupport[chainID]) {
+      store.dispatch(setChainId(chainID));
+      store.dispatch(setWeb3(web3));
     } else {
       alert('Farming does not support this network');
       await store.dispatch(logout());
@@ -76,18 +161,5 @@ export const connectWeb3Modal = async () => {
   provider.on('disconnect', (error) => {
     console.log(error);
     store.dispatch(setAddress(null));
-  });
-};
-
-export const injectNetworkNoEthereum = (params) => {
-  window.ethereum.request({
-    method: 'wallet_addEthereumChain',
-    params: [params],
-  });
-};
-export const injectNetworkInEthereum = (params) => {
-  window.ethereum.request({
-    method: 'wallet_updateChain',
-    params: [params],
   });
 };

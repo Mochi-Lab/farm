@@ -4,9 +4,14 @@ import './index.css';
 export default function ToggleDarkMode() {
   const [isDark, setIsDark] = useState(localStorage.getItem('theme') === 'dark');
   useEffect(() => {
-    document
-      .getElementsByTagName('HTML')[0]
-      .setAttribute('data-theme', localStorage.getItem('theme'));
+    if (localStorage.getItem('theme') !== 'null') {
+      localStorage.setItem('theme', 'light');
+      document.getElementsByTagName('HTML')[0].setAttribute('data-theme', 'light');
+    } else {
+      document
+        .getElementsByTagName('HTML')[0]
+        .setAttribute('data-theme', localStorage.getItem('theme'));
+    }
   }, []);
 
   const toggleThemeChange = () => {
