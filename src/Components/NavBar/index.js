@@ -12,7 +12,7 @@ export default function NavBar() {
             <img src={logoMochi} alt='logo'></img>
           </Link>
         </div>
-        <div className='tag-name-chain'>
+        <div className='info-chain'>
           <LeftMenu />
         </div>
       </div>

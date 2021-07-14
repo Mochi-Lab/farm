@@ -150,6 +150,11 @@
   border-bottom-color: transparent;
 }
 
+.flex {
+  display: flex;
+  align-items: center;
+}
+
 @media (max-width: 767px) {
   .barsMenu {
     display: inline-block;

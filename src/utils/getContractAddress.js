@@ -1,3 +1,7 @@
+import bnb from 'Assets/icons/binance-smart-chain-icon.png';
+import polygon from 'Assets/icons/polygon-icon.png';
+import eth from 'Assets/icons/ethereum-icon.png';
+
 import Artboard1 from 'Assets/icons/Artboard1.png';
 import Artboard2 from 'Assets/icons/Artboard2.png';
 import Artboard3 from 'Assets/icons/Artboard3.png';
@@ -37,6 +41,11 @@ const contractAddress = {
     USDT: { address: '0xdac17f958d2ee523a2206206994597c13d831ec7', symbol: 'USDT', decimals: 6 },
     NATIVE: { address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', symbol: 'WETH', decimals: 18 }, // WETH
     PairUsdtNative: '0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852', // pair USDT-WETH
+  },
+  137: {
+    USDT: { address: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F', symbol: 'USDT', decimals: 6 },
+    NATIVE: { address: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', symbol: 'WETH', decimals: 18 }, // WMATIC
+    PairUsdtNative: '0x604229c960e5CACF2aaEAc8Be68Ac07BA9dF81c3', // pair USDT-WMATIC
   },
 };
 
@@ -349,6 +358,35 @@ const rootUrlsView = {
     blocksPerMonth: 864000,
     swap: 'https://exchange.pancakeswap.finance/#/swap?outputCurrency=',
   },
+  137: {
+    addLP: 'https://quickswap.exchange/#/add',
+    viewContract: 'https://polygonscan.com/address/',
+    seePairInfo: 'https://info.quickswap.exchange/pair/',
+    blocksPerMonth: 864000,
+    swap: 'https://quickswap.exchange/#/swap?inputCurrency=',
+  },
+};
+
+export const listChainsSupport = [
+  { chainId: 1, name: 'Ethereum', icon: eth, isETH: true /* Ethereum Mainnet*/ },
+  { chainId: 56, name: 'BSC', icon: bnb, isETH: false /*BSC Mainnet*/ },
+  { chainId: 137, name: 'Polygon', icon: polygon, isETH: false /* Polygon Mainnet*/ },
+  // { chainId: 1666600000, name: 'Harmony', icon: one, isETH: false /*BSC Testnet*/ },
+];
+
+const infoChains = {
+  //Ethereum Mainnet
+  1: { name: 'Ethereum', icon: eth },
+  //Ethereum Testnet Rinkeby
+  4: { name: 'Rinkeby', icon: eth },
+  //Polygon Mainnet
+  137: { name: 'Polygon', icon: polygon },
+  //BSC Mainnet
+  56: { name: 'BSC', icon: bnb },
+  //BSC Testnet
+  97: { name: 'BSC-Testnet', icon: bnb },
+  // Harmony mainet
+  // 1666600000: { name: 'Harmony', icon: one },
 };
 
 export const getContractAddress = (_chainId) => {
@@ -362,4 +400,7 @@ export const getListTokensPoolDefault = (_chainId) => {
 };
 export const getRootUrlView = (_chainId) => {
   return rootUrlsView[_chainId];
+};
+export const getInfoChain = (_chainId) => {
+  return infoChains[_chainId];
 };

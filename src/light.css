@@ -42,3 +42,15 @@ html[data-theme='light'] {
 .ant-radio-button-wrapper {
   background-color: #fff !important;
 }
+
+[data-theme='light'] .dropdown-select-chain {
+  background-color: #ffffff !important;
+}
+
+[data-theme='light'] .dropdown-select-chain img {
+  box-shadow: 0 0 0 2px #dfe8f9;
+}
+
+[data-theme='light'] .dropdown_network_header {
+  background-color: #f0f5f9 !important;
+}

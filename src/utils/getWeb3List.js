@@ -33,6 +33,11 @@ export const web3Default = {
     name: 'Ethereum Mainnet',
     explorer: 'https://etherscan.io',
   },
+  137: {
+    web3Default: new Web3(new Web3.providers.HttpProvider('https://rpc-mainnet.maticvigil.com')),
+    name: 'Ethereum Mainnet',
+    explorer: 'https://polygonscan.com/',
+  },
 };
 
 export const listInjectNetwork = {
@@ -82,7 +87,10 @@ export const listInjectNetwork = {
   },
 };
 
-export const networkDefault = 56;
+// export const networkDefault = 56;
+export const networkDefault = !!localStorage.getItem('chainId')
+  ? parseInt(localStorage.getItem('chainId'))
+  : 56;
 
 export const getWeb3List = (_chainId) => {
   return web3Default[_chainId];

@@ -190,3 +190,21 @@ html[data-theme='dark'] {
   background: #262626;
   color: white;
 }
+
+[data-theme='dark'] .dropdown_network_header,
+.dropdown-select-chain {
+  background-color: #242f36 !important;
+}
+
+[data-theme='dark'] .dropdown-select-chain .ant-dropdown-menu-item-group-title {
+  color: rgb(250, 250, 250) !important;
+}
+
+[data-theme='dark'] .dropdown-select-chain img {
+  box-shadow: 0 0 0 2px #35444f;
+}
+
+[data-theme='dark'] .dropdown-select-chain .ant-dropdown-menu-item:hover,
+.dropdown-select-chain .ant-dropdown-menu-submenu-title:hover {
+  background-color: #35444f;
+}
