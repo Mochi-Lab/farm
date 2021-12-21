@@ -103,7 +103,7 @@ export default function CardPool({
             <div className='box-multi'>
               <div className='multier-pool'>
                 <h3>
-                  {parseBalance(multiplier, 12) * token.multiplier}{' '}
+                  {(parseBalance(multiplier, 12) * token.multiplier).toFixed(2)}{' '}
                   <span className='moma-per-block'>{token.symbolEarn}/Block</span>
                 </h3>
               </div>
